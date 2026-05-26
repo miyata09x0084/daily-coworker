@@ -31,6 +31,7 @@ output/              # AI出力ファイル
 | deep-research  | 「〜について調べて」「リサーチして」   | /deep-research   | 6エージェント体制でリサーチチーム起動      |
 | write-article  | 「〜について記事を書いて」「ブログ書いて」 | /write-article | 5フェーズで記事作成チーム起動              |
 | agent-memory   | 「覚えておいて」「メモして」           | /agent-memory    | 発言内容を分類してAI記憶ファイルに保存     |
+| interview-prep | 「面接準備」「面接対策」「面接メモ」    | /interview-prep  | 経歴書×募集要項から面接質疑応答メモを作成   |
 
 ## コンテキスト管理
 
