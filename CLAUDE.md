@@ -31,7 +31,6 @@ output/              # AI出力ファイル
 | deep-research  | 「〜について調べて」「リサーチして」   | /deep-research   | 6エージェント体制でリサーチチーム起動      |
 | write-article  | 「〜について記事を書いて」「ブログ書いて」 | /write-article | 5フェーズで記事作成チーム起動              |
 | agent-memory   | 「覚えておいて」「メモして」           | /agent-memory    | 発言内容を分類してAI記憶ファイルに保存     |
-| motivation-prep | 「志望理由」「志望動機」「なぜ当社か」「志望理由書」 | /motivation-prep | 経歴書×募集要項から志望理由を口頭メモ＋提出文書の2形態で作成 |
 
 ## コンテキスト管理
 
