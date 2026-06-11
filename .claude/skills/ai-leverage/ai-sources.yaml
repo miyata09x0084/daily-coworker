@@ -1,0 +1,67 @@
+# ai-leverage のソース定義（一次情報のみ）
+# tier: official(公式発表) / papers(研究論文) / tools(ツール・OSS動向)
+# 取得方式は fetch.strategy で切替（SKILL.md 手順1参照）
+# 公開URLのみ。秘匿値が必要になったら ${VAR} 表記で .env から展開する。
+
+sources:
+  # ---- official: 公式発表/リリース ----
+  - name: Anthropic News
+    tier: official
+    fetch:
+      strategy: webpage-extract
+      url: https://www.anthropic.com/news
+      limit: 5
+
+  # openai.com/news は bot 保護で WebFetch/curl とも 403（恒常的に取得不可）。
+  # 代替として OpenAI 公式 GitHub のリリースを一次情報として使う。
+  - name: OpenAI (GitHub releases)
+    tier: official
+    fetch:
+      strategy: github-releases
+      repos:
+        - openai/openai-python
+        - openai/openai-node
+      limit: 1  # 各 repo の最新リリース1件
+
+  - name: Google DeepMind Blog
+    tier: official
+    fetch:
+      strategy: webpage-extract
+      url: https://deepmind.google/blog/
+      limit: 5
+
+  # ---- papers: 研究論文 ----
+  - name: HF Papers (daily)
+    tier: papers
+    fetch:
+      strategy: hf-papers
+      query: LLM agent OR reasoning OR retrieval OR evaluation
+      limit: 6
+      fallback: arxiv-api
+
+  - name: arXiv cs.AI (recent)
+    tier: papers
+    fetch:
+      strategy: arxiv-api
+      url: https://export.arxiv.org/api/query?search_query=cat:cs.AI&sortBy=submittedDate&sortOrder=descending&max_results=8
+      limit: 8
+
+  # ---- tools: ツール/OSS動向 ----
+  - name: GitHub Trending (daily)
+    tier: tools
+    fetch:
+      strategy: github-trending
+      url: https://github.com/trending?since=daily
+      limit: 8
+      filter: AI / LLM / agent 関連のみ残す
+
+  - name: Key AI repos (releases)
+    tier: tools
+    fetch:
+      strategy: github-releases
+      repos:
+        - ggml-org/llama.cpp
+        - vllm-project/vllm
+        - astral-sh/ruff
+        - BerriAI/litellm
+      limit: 1  # 各 repo の最新リリース1件
