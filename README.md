@@ -118,20 +118,7 @@ cd daily-coworker
 
 Required only for `/daily-schedule`. Connect Google Calendar through Claude Code's MCP settings.
 
-### 4. Create `.env`
-
-Set news source URLs for `/tech-news`.
-
-```bash
-cat > .env <<'EOF'
-HACKER_NEWS_TOP_STORIES_URL=https://hacker-news.firebaseio.com/v0/topstories.json
-HACKER_NEWS_ITEM_URL_TEMPLATE=https://hacker-news.firebaseio.com/v0/item/{id}.json
-TECHCRUNCH_RSS_URL=https://techcrunch.com/feed/
-REDDIT_TECH_URL=https://www.reddit.com/r/technology/hot.json
-EOF
-```
-
-### 5. Initialize memory files
+### 4. Initialize memory files
 
 Copy each memory file from its template.
 
