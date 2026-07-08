@@ -1,6 +1,11 @@
 # macOS
 .DS_Store
 
+# 環境変数（秘匿値。公開設定は各 skill の *-sources.yaml に直接記載する）
+.env
+.env.*
+!.env.example
+
 # AI出力（一時的な成果物）
 output/
 
@@ -14,8 +19,9 @@ logs/
 00_context/memories/*.md
 !00_context/memories/*.template.md
 
-# Claude Code ローカル設定（各マシン固有）
+# Claude Code ローカル設定・作業用ワークツリー（各マシン固有の使い捨て成果物）
 .claude/settings.local.json
+.claude/worktrees/
 
 # 内部設計ドキュメント（個人ワークスペース）
 docs/

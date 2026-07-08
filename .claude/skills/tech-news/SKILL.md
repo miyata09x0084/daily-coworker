@@ -12,11 +12,10 @@ description: テックニュースを複数ソースから並列取得し横断�
 
 ### 0. 設定の読み込み
 
-1. リポジトリルートの `.env` を Read し、環境変数の値を取得する
-2. `.claude/skills/tech-news/news-sources.yaml` を Read する
-3. YAML 内の `${VAR}` 表記を `.env` の値に置換し、各ソースの最終設定値を得る
+1. `.claude/skills/tech-news/news-sources.yaml` を Read する
+2. `${VAR}` 表記があれば `.env`（gitignore対象）を Read して展開する（現状は公開URLのみで `.env` 不要）
 
-以降の手順では、この展開済み設定のみを使う。ハードコード禁止。
+以降の手順では、この設定のみを使う。ハードコード禁止。
 
 ### 1. ニュース取得（ソース並列）
 
@@ -137,8 +136,7 @@ Sources: {sources[*].name を "、" で連結}
 
 ## 新しいソースを追加する場合
 
-1. `.env` に必要な URL を env 変数として追加
-2. `.claude/skills/tech-news/news-sources.yaml` の `sources:` 配列に entry を追加
+1. `.claude/skills/tech-news/news-sources.yaml` の `sources:` 配列に entry を追加（公開URLは直接記載）
    - 既存 3 つのいずれかの `fetch.strategy` に該当すれば、新コードは不要
    - 該当しない新しい取得パターンなら、この SKILL.md に新 strategy の処理ブロックを追記
-3. skill 本体のロジックには手を入れなくて良い（戦略ディスパッチの恩恵）
+2. skill 本体のロジックには手を入れなくて良い（戦略ディスパッチの恩恵）

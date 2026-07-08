@@ -3,7 +3,7 @@
 # 新しいソースを追加したい場合は、このファイルに entry を追加するだけで済む
 # （/tech-news コマンド本体の編集は不要）。
 #
-# URL 値は .env を参照する。${VAR} 表記を使うこと。
+# URL は公開情報なので直接記載する。秘匿値が必要になったら ${VAR} 表記で .env（gitignore対象）から展開する。
 # fetch.strategy は "list-then-detail" / "rss" / "json-list" のいずれか。
 # fetch.tool は "webfetch" (デフォルト) または "curl" を指定する。
 # curl を使う場合は fetch.user_agent を必須で指定する (bot ブロック回避)。
@@ -14,8 +14,8 @@ sources:
     limit: 10
     fetch:
       strategy: list-then-detail
-      list_url: ${HACKER_NEWS_TOP_STORIES_URL}
-      detail_url_template: ${HACKER_NEWS_ITEM_URL_TEMPLATE}
+      list_url: https://hacker-news.firebaseio.com/v0/topstories.json
+      detail_url_template: https://hacker-news.firebaseio.com/v0/item/{id}.json
     extract:
       title: title
       url: url
@@ -26,7 +26,7 @@ sources:
     limit: 10
     fetch:
       strategy: rss
-      url: ${TECHCRUNCH_RSS_URL}
+      url: https://techcrunch.com/feed/
     extract:
       title: title
       url: link
@@ -40,7 +40,7 @@ sources:
       # Reddit は WebFetch をブロックするため curl + User-Agent 回避
       tool: curl
       user_agent: "Mozilla/5.0 (compatible; DailyCoworkerBot/1.0)"
-      url: ${REDDIT_TECH_URL}
+      url: https://www.reddit.com/r/technology/top.json?t=day&limit=10
       list_path: data.children
     extract:
       title: data.title
