@@ -30,6 +30,7 @@ output/              # AI出力ファイル
 | tech-news      | 「テックニュース」「ニュース」         | /tech-news       | 複数ソース並列取得＋横断インサイト抽出     |
 | deep-research  | 「〜について調べて」「リサーチして」   | /deep-research   | 6エージェント体制でリサーチチーム起動      |
 | write-article  | 「〜について記事を書いて」「ブログ書いて」 | /write-article | 5フェーズで記事作成チーム起動              |
+| reply-email    | 「メール返信」「このメールに返信して」 | /reply-email     | 文体ガイドに基づき返信案を1案生成(初回は文体セットアップ) |
 | agent-memory   | 「覚えておいて」「メモして」           | /agent-memory    | 発言内容を分類してAI記憶ファイルに保存     |
 
 ## コンテキスト管理
