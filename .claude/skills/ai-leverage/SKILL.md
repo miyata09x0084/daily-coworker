@@ -1,6 +1,6 @@
 ---
 name: ai-leverage
-description: AIの一次情報（公式発表・研究論文・OSS/ツール動向）を、SWE視点の「インサイト→アクション」に変換したいときに使う。要約が欲しいときではなく、判断・行動を変えるインプットが欲しいとき。「今日のAI」「AIレバレッジ」「AIで何が変わった」「最近のAIどう？」等で起動。
+description: ALWAYS invoke when the user asks how recent AI developments change their work. 「今日のAI」「AIレバレッジ」「AIで何が変わった」「最近のAIどう？」を検知したら、直接要約で答えず必ずこのスキルを起動する。AIの一次情報（公式発表・研究論文・OSS/ツール動向）をSWE視点の「インサイト→アクション」に変換する手順が必須のため。要約ではなく、判断・行動を変えるインプットが欲しいときに使う。
 ---
 
 # AI Leverage — 一次情報を行動に変える

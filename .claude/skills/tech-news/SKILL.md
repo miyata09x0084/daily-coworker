@@ -1,6 +1,6 @@
 ---
 name: tech-news
-description: テックニュースを複数ソースから並列取得し横断インサイトを抽出する。「テックニュース」「ニュース」等で起動。
+description: ALWAYS invoke when the user asks for tech news. 「テックニュース」「ニュース」を検知したら、直接検索せず必ずこのスキルを起動する。news-sources.yaml に定義された複数ソースの並列取得と横断インサイト抽出が必須のため。
 ---
 
 # テックニュース斜め読み

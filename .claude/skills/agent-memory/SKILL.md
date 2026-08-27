@@ -1,6 +1,6 @@
 ---
 name: agent-memory
-description: ユーザーの発言内容を分類してAI記憶ファイルに保存する。「覚えておいて」「メモして」等で起動。
+description: ALWAYS invoke when the user asks to remember or note something. 「覚えておいて」「メモして」「記録して」を検知したら、その場の返答で済ませず必ずこのスキルを起動する。分類ルールに従った記憶ファイルへの保存が必須のため。
 ---
 
 # AI記憶管理

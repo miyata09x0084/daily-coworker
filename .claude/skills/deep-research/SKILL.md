@@ -1,6 +1,6 @@
 ---
 name: deep-research
-description: 6エージェント体制で多角的なディープリサーチを行う。「〜について調べて」「リサーチして」等で起動。
+description: ALWAYS invoke when the user asks to research or investigate a topic. 「〜について調べて」「リサーチして」を検知したら、単独で調べ始めず必ずこのスキルを起動する。6エージェント体制の多角的リサーチプロセス（並列調査→統合→レビュー→執筆）が必須のため。
 ---
 
 # ディープリサーチ
