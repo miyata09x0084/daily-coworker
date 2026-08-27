@@ -1,6 +1,6 @@
 ---
 name: write-article
-description: 5フェーズパイプラインで記事を作成する。「〜について記事を書いて」「ブログ書いて」等で起動。
+description: ALWAYS invoke when the user asks to write an article or blog post. 「〜について記事を書いて」「ブログ書いて」を検知したら、直接書き始めず必ずこのスキルを起動する。5フェーズパイプラインでの記事作成が必須のため。
 ---
 
 # 記事作成

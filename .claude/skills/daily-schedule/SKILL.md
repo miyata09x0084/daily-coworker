@@ -1,6 +1,6 @@
 ---
 name: daily-schedule
-description: 1日のスケジュールをGoogle Calendar連携で作成する。「おはよう」「今日の予定」「今日のスケジュール」等で起動。
+description: ALWAYS invoke when the user greets in the morning or asks about today's schedule. 「おはよう」「今日の予定」「今日のスケジュール」を検知したら、直接予定を答えず必ずこのスキルを起動する。Google Calendar連携の手順に従う必要があるため。
 ---
 
 # デイリースケジュール作成
