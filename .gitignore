@@ -25,3 +25,6 @@ logs/
 
 # 内部設計ドキュメント（個人ワークスペース）
 docs/
+
+# メール文体ガイド（実メール由来の個人データを含むため管理外）
+.claude/skills/_shared/email-style.md
