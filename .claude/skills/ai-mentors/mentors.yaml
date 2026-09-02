@@ -1,0 +1,62 @@
+# ai-mentors の監視対象とルート定義
+# X本体は直接取得不可（x.com は 402 / Nitter系は 2026-08-24 の停止命令で全滅）。
+# 取得は「検索・アグリゲータ経由」: 重要発言を0〜2日遅れで拾う設計。
+# バズらなかった小さな投稿は拾えない——この限界は仕様であり、水増しで埋めない。
+# 公開URLのみ。秘匿値が必要になったら ${VAR} 表記で .env から展開する。
+
+lookback_days: 7 # 既読台帳が無い初回に遡る日数。これより古い発信は初回でも拾わない
+
+routes:
+  # ---- 基幹: X言説の日次要約（平日刊・1〜2日遅れ・RSS安定） ----
+  - name: AINews X Recap
+    fetch:
+      strategy: rss
+      url: https://news.smol.ai/rss.xml
+      limit: 3
+    note: 本文の「AI Twitter Recap」セクションから監視対象人物への言及を抽出する
+
+  # ---- 人物検知: 報道経由（重要発言は即日記事化される。X検索索引は2〜7週遅延） ----
+  - name: news-search
+    fetch:
+      strategy: web-search
+      query_template: '"{name}" tweet OR post OR says（直近7日で検索）'
+    note: 記事の発行日で発信日を裏取りする。X直接ヒットは期待しない
+
+  # ---- 補助: 投稿本文断片の取得源（日時表示に虚偽の実例あり・単独では使わない） ----
+  - name: techtwitter
+    fetch:
+      strategy: webpage-extract
+      url_template: https://www.techtwitter.com/profiles/{x}
+    note: 相対日時（「2時間前」）は信用禁止。31日前の投稿を「2時間前」と表示した実例（2026-09-02検証）
+
+mentors:
+  - name: Andrej Karpathy
+    x: karpathy
+    focus: 学び方・時間の使い方・技術の本質
+  - name: Boris Cherny
+    x: bcherny
+    focus: AIエージェント開発ワークフローの最前線
+  - name: Dario Amodei
+    x: DarioAmodei # 投稿は月1以下。主戦場はエッセイ
+    channels:
+      - https://darioamodei.com/
+    focus: 長期視点・コストを払ってでも原則を守る意思決定
+  - name: Sam Altman
+    x: sama
+    focus: 業界の方向性・加速と抑制のバランス感覚
+  - name: Demis Hassabis
+    x: demishassabis
+    focus: 科学的アプローチ・比較優位への自己再配置
+  - name: Simon Willison
+    x: simonw
+    channels:
+      - https://simonwillison.net/atom/everything/ # RSS。Xより濃い一次発信
+    focus: AI実務活用の最速言語化・検証の手つき
+  - name: swyx
+    x: swyx
+    channels:
+      - https://www.latent.space/feed # RSS
+    focus: AIエンジニアのキャリア・市場観・編集的判断
+  - name: François Chollet
+    x: fchollet
+    focus: 懐疑的視点・公開で誤りを認め直す知的誠実性
