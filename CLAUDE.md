@@ -33,6 +33,7 @@ output/              # AI出力ファイル
 | reply-email    | 「メール返信」「このメールに返信して」 | /reply-email     | 文体ガイドに基づき返信案を1案生成(初回は文体セットアップ) |
 | agent-memory   | 「覚えておいて」「メモして」           | /agent-memory    | 発言内容を分類してAI記憶ファイルに保存     |
 | ai-leverage    | 「今日のAI」「AIレバレッジ」           | /ai-leverage     | AI一次情報をSWE視点の「インサイト→アクション」に変換 |
+| ai-mentors     | 「AI開発者の動向」「メンターの発信」   | /ai-mentors      | AI第一人者の発信を差分取得し「観察→写像」でデイリーレポート化 |
 
 ## コンテキスト管理
 
