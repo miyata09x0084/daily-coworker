@@ -34,6 +34,7 @@ output/              # AI出力ファイル
 | agent-memory   | 「覚えておいて」「メモして」           | /agent-memory    | 発言内容を分類してAI記憶ファイルに保存     |
 | ai-leverage    | 「今日のAI」「AIレバレッジ」           | /ai-leverage     | AI一次情報をSWE視点の「インサイト→アクション」に変換 |
 | ai-mentors     | 「AI開発者の動向」「メンターの発信」   | /ai-mentors      | AI第一人者の発信を差分取得し「観察→写像」でデイリーレポート化 |
+| ai-biz         | 「ビジネス評価」「これで稼げる？」「儲かる機会」 | /ai-biz    | 生成AIの商機を発見→発想→評価し、門番型判定（Go/Kill/Watch）＋見立て台帳で記録 |
 
 ## コンテキスト管理
 
