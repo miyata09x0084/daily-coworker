@@ -1,0 +1,62 @@
+# 商機発見ソース宣言（ai-biz）
+#
+# 新しいソースを追加したい場合は、このファイルに entry を追加するだけで済む
+# （SKILL.md 本体の編集は不要）。
+#
+# 責務分担: 技術一般の追跡（公式発表・論文・GitHub Trending）は ai-leverage。
+# ここは「生成AIプロダクト構築素材」と「何にお金が払われているか」だけを見る。
+#
+# fetch.strategy は "rss" / "hf-mcp" / "web-search" のいずれか。
+
+categories:
+  multimodal-api: 音声・動画・画像の生成API/モデル
+  agent-framework: AIエージェント開発フレームワーク
+  observability: LLM/エージェントの観測・評価ツール
+  money-signal: 何にお金が払われているか（ローンチ・収益事例）
+
+sources:
+  - name: HF Trending マルチモーダル
+    category: multimodal-api
+    limit: 10
+    fetch:
+      strategy: hf-mcp
+      note: >
+        Hugging Face MCP で ls hf://models/trending を取得し、
+        text-to-speech / text-to-video / text-to-image / audio 系タグのみ残す。
+        MCP 未接続なら WebFetch https://huggingface.co/models?sort=trending で代替。
+
+  - name: Product Hunt
+    category: money-signal
+    limit: 10
+    fetch:
+      strategy: rss
+      url: https://www.producthunt.com/feed
+    filter: 生成AI関連のみ拾う（ローンチ = 誰かが売り始めた証拠）
+
+  - name: Show HN
+    category: money-signal
+    limit: 10
+    fetch:
+      strategy: rss
+      url: https://hnrss.org/show
+    filter: 生成AI関連のみ拾う（個人〜小規模の実装コスト相場観）
+
+  - name: エージェントFW・観測ツール動向
+    category: [agent-framework, observability]
+    limit: 5
+    fetch:
+      strategy: web-search
+      queries:
+        - new AI agent framework launch
+        - LLM observability evals tool launch
+        - AI tool MRR solo developer revenue
+
+# 動作設定（個人値は output/ai-biz/config.yaml に持つ。ここは既定値）
+config:
+  lookback_days: 7
+  max_candidates: 3          # 簡易足切りの生存上限
+  default_hours_per_week: 10 # 週の可処分時間の既定値（初回起動時に本人確認）
+  mvp_deadline_months: 6     # 実装コスト軸の足切り: この期間でMVP検証可能か
+  output_dir: output/ai-biz
+  ledger: output/ai-biz/ledger.md
+  personal_config: output/ai-biz/config.yaml
