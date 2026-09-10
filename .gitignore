@@ -31,3 +31,7 @@ docs/
 
 # メール文体ガイド（実メール由来の個人データを含むため管理外）
 .claude/skills/_shared/email-style.md
+
+# repo-tour レンダラー（仕組みは追跡、依存物・ビルド生成物は管理外）
+.claude/skills/repo-tour/renderer/node_modules/
+.claude/skills/repo-tour/renderer/out/

@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "repoName": "demo",
+    "title": "repo-tour デモ",
+    "date": "2026-09-08",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "tts": {
+      "voiceName": "Kore",
+      "stylePrompt": "落ち着いたナレーターとして、次の文を読んでください",
+      "credit": "音声・画像: Google Gemini"
+    }
+  },
+  "scenes": [
+    {
+      "id": "s01",
+      "type": "title",
+      "narration": "これはレポツアーの動作確認用デモです。",
+      "visual": {
+        "title": "repo-tour",
+        "subtitle": "リポジトリを2〜3分の説明動画に"
+      }
+    },
+    {
+      "id": "s02",
+      "type": "diagram",
+      "narration": "リポジトリを読み解き、絵コンテの承認を経て、動画を書き出します。",
+      "visual": {
+        "caption": "repo-tour の流れ",
+        "nodes": [
+          {"id": "repo", "label": "リポジトリ", "emoji": "📁", "col": 0, "row": 0},
+          {"id": "board", "label": "絵コンテ承認", "emoji": "✅", "col": 1, "row": 0},
+          {"id": "video", "label": "説明動画", "emoji": "🎬", "col": 2, "row": 0}
+        ],
+        "edges": [
+          {"from": "repo", "to": "board", "label": "読解"},
+          {"from": "board", "to": "video", "label": "生成"}
+        ],
+        "reveal": [
+          ["repo"],
+          ["repo-board-edge", "board"],
+          ["board-video-edge", "video"]
+        ]
+      }
+    },
+    {
+      "id": "s03",
+      "type": "story",
+      "narration": "朝、ミヤタさんは新しいリポジトリの説明動画を眺めています。",
+      "visual": {
+        "imagePrompt": "soft flat illustration, a person watching an explainer video on a laptop in a cozy morning room, warm light, no text in image",
+        "kenBurns": "zoom-in",
+        "caption": "動画で最初の3分を置き換える"
+      }
+    },
+    {
+      "id": "s99",
+      "type": "credits",
+      "narration": "",
+      "durationSecHint": 5,
+      "visual": {
+        "extraLines": []
+      }
+    }
+  ]
+}
