@@ -22,6 +22,10 @@ logs/
 00_context/memories/*.md
 !00_context/memories/*.template.md
 
+# 戦略（個人事情を含むため本体は管理外、テンプレのみ追跡）
+01_strategy/*.md
+!01_strategy/*.template.md
+
 # Claude Code ローカル設定・作業用ワークツリー（各マシン固有の使い捨て成果物）
 .claude/settings.local.json
 .claude/worktrees/
