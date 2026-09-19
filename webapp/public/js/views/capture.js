@@ -11,7 +11,15 @@
 
 import { api } from '../api.js';
 import { chipGroup, el, field } from '../dom.js';
-import { CHANNELS, CONDITIONS, FRICTIONS, OWNERS, TECHNIQUES, UNDERSTANDING_LEVELS } from '/shared/constants.js';
+import {
+  CHANNELS,
+  CONDITIONS,
+  FRICTIONS,
+  OWNERS,
+  TECHNIQUES,
+  UNDERSTANDING_LEVELS,
+  WRITING_EXAMPLES,
+} from '/shared/constants.js';
 import { addDays } from '/shared/dates.js';
 
 export function renderCapture(ctx) {
@@ -64,7 +72,7 @@ export function renderCapture(ctx) {
   const summaryInput = el('textarea', {
     id: 'summary',
     required: true,
-    placeholder: '例）通院の日程を決めた。来週の月曜に一緒に行くことにした。',
+    placeholder: '例）通院の日程を決めた。紙に書いて渡し、日付を言い直してもらった。',
     onInput: (e) => {
       form.summary = e.target.value;
     },
@@ -129,8 +137,9 @@ export function renderCapture(ctx) {
       field(
         '話した内容',
         summaryInput,
-        '短くていい。あとで読む自分に向けて',
+        '短くていい。主語は自分にする',
       ),
+      writingHint(),
       field(
         'いつ',
         el('input', {
@@ -247,6 +256,44 @@ export function renderCapture(ctx) {
 
   queueMicrotask(() => summaryInput.focus());
   return formEl;
+}
+
+/**
+ * 書き方の作法を入力欄のすぐ横に置く。
+ * この画面はいつか相手に覗かれる。そのとき傷つく言葉が書いてあると、
+ * 記録そのものが続かなくなるので、例を出して主語を自分に寄せてもらう。
+ */
+function writingHint() {
+  return el(
+    'details',
+    { class: 'table-view', style: { marginTop: '-8px', marginBottom: '14px' } },
+    el('summary', { text: '書き方に迷ったら（画面はいつか覗かれます）' }),
+    el(
+      'table',
+      {},
+      el(
+        'thead',
+        {},
+        el('tr', {}, el('th', { text: '書かない' }), el('th', { text: 'こう書く' })),
+      ),
+      el(
+        'tbody',
+        {},
+        ...WRITING_EXAMPLES.map((e) =>
+          el(
+            'tr',
+            {},
+            el('td', { style: { color: 'var(--critical-ink)' }, text: e.avoid }),
+            el('td', { style: { color: 'var(--good-ink)' }, text: e.instead }),
+          ),
+        ),
+      ),
+    ),
+    el('p', {
+      style: { margin: '8px 0 0', fontSize: '0.85rem', color: 'var(--ink-muted)' },
+      text: '主語を自分にすると、記録がそのまま次に直す場所になります。',
+    }),
+  );
 }
 
 function commitmentRow(ctx, form, row, index, rerender, today) {

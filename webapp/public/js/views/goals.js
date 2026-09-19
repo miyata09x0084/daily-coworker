@@ -167,7 +167,7 @@ function newGoalCard(ctx) {
       'なぜ大事か',
       el('textarea', {
         rows: 2,
-        placeholder: '本人の言葉のまま書いておくと、迷ったときの判断材料になる',
+        placeholder: '相手の言葉のまま書いておくと、迷ったときの判断材料になる',
         onInput: (e) => {
           draft.why = e.target.value;
         },

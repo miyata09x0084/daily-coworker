@@ -3,7 +3,7 @@
 import { el } from './dom.js';
 import { api } from './api.js';
 import { addDays, formatJa } from '/shared/dates.js';
-import { OWNERS, labelOf } from '/shared/constants.js';
+import { CONCEPT, DELIVERY_RULES, OWNERS, labelOf } from '/shared/constants.js';
 
 export function dueBadge(commitment, derived) {
   if (commitment.status === 'done') {
@@ -103,6 +103,30 @@ export function commitmentItem(ctx, c, { showSource = false } = {}) {
           onClick: () => ctx.act(() => api.updateCommitment(c.id, { addReminder: true }), '伝え直しを記録しました'),
         }),
         dueEditor(ctx, c),
+        // 「上限を超えたぶんはこちらで預かる」を、警告の文言だけで終わらせず操作にする。
+        // 渡しすぎに気づいた場所から、そのまま引き取れないと結局そのままになる。
+        c.owner === 'partner' || c.owner === 'both'
+          ? el('button', {
+              class: 'btn btn--sm',
+              type: 'button',
+              text: 'こちらで預かる',
+              title: '担当を自分に移します。渡しすぎているときの逃がし方です',
+              onClick: () =>
+                ctx.act(
+                  () => api.updateCommitment(c.id, { owner: 'me' }),
+                  `${ctx.settings.myName}の担当にしました`,
+                ),
+            })
+          : el('button', {
+              class: 'btn btn--sm btn--ghost',
+              type: 'button',
+              text: '相手にお願いする',
+              onClick: () =>
+                ctx.act(
+                  () => api.updateCommitment(c.id, { owner: 'partner' }),
+                  `${ctx.settings.partnerName}の担当にしました`,
+                ),
+            }),
         el('button', {
           class: 'btn btn--sm btn--ghost btn--danger',
           type: 'button',
@@ -172,6 +196,94 @@ function dueEditor(ctx, c) {
 
 export function emptyState(text) {
   return el('p', { class: 'empty', text });
+}
+
+/**
+ * このツールが何を数えていて、何を数えていないか。
+ * 使っているうちに「相手ができなかったことの台帳」へ戻っていくのを防ぐために、
+ * 説明資料ではなく画面に置いてある。
+ */
+export function conceptCard() {
+  const column = (label, items, muted) =>
+    el(
+      'div',
+      { class: 'stat', style: { flex: '1 1 240px' } },
+      el('div', { class: 'stat__label', text: label }),
+      el(
+        'ul',
+        {
+          style: {
+            margin: '6px 0 0',
+            padding: '0 0 0 20px',
+            fontSize: '0.92rem',
+            lineHeight: '1.8',
+            color: muted ? 'var(--ink-muted)' : 'var(--ink)',
+          },
+        },
+        ...items.map((t) => el('li', { text: t })),
+      ),
+    );
+
+  return el(
+    'section',
+    { class: 'card' },
+    el('div', { class: 'card__head' }, el('h2', { text: CONCEPT.headline })),
+    el(
+      'div',
+      { class: 'row', style: { alignItems: 'stretch', gap: '10px' } },
+      column('記録しないもの', CONCEPT.notRecords, true),
+      column('記録するもの', CONCEPT.records, false),
+    ),
+    el('p', {
+      style: { margin: '12px 0 0', fontSize: '0.92rem', color: 'var(--ink-2)' },
+      text: CONCEPT.note,
+    }),
+  );
+}
+
+/** 伝える側が守る約束。相手に課すルールは1つも置かない */
+export function rulesCard(ctx, { open = false } = {}) {
+  const rows = DELIVERY_RULES.map((rule) =>
+    el(
+      'tr',
+      {},
+      el('td', { text: rule.title }),
+      el('td', { style: { color: 'var(--critical-ink)' }, text: rule.avoid }),
+      el('td', {
+        style: { color: 'var(--good-ink)' },
+        text:
+          rule.key === 'cap'
+            ? `${ctx.settings.maxOpenAtOnce + 1}つ目はこちらで預かる`
+            : rule.instead,
+      }),
+    ),
+  );
+
+  return el(
+    'details',
+    { class: 'table-view', open: open || null },
+    el('summary', { text: '伝え方の約束（このツールがこちら側に課していること）' }),
+    el(
+      'table',
+      {},
+      el(
+        'thead',
+        {},
+        el(
+          'tr',
+          {},
+          el('th', { text: '守ること' }),
+          el('th', { text: 'やらないこと' }),
+          el('th', { text: '代わりにすること' }),
+        ),
+      ),
+      el('tbody', {}, ...rows),
+    ),
+    el('p', {
+      style: { margin: '8px 0 0', fontSize: '0.85rem', color: 'var(--ink-muted)' },
+      text: '5つとも守るのはこちら側です。相手に課すルールは1つも作っていません。',
+    }),
+  );
 }
 
 export function alertRow(alert, onJump) {

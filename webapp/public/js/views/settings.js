@@ -8,6 +8,7 @@
 
 import { api } from '../api.js';
 import { el, field } from '../dom.js';
+import { conceptCard, rulesCard } from '../components.js';
 import { DEFAULT_SETTINGS } from '/shared/constants.js';
 
 const NUMERIC_FIELDS = [
@@ -102,6 +103,15 @@ export function renderSettings(ctx) {
         el('a', { class: 'btn', href: '/api/export', download: '', text: 'JSONで書き出す' }),
         importButton(ctx),
       ),
+    ),
+
+    conceptCard(),
+
+    el(
+      'section',
+      { class: 'card' },
+      el('div', { class: 'card__head' }, el('h3', { text: '伝え方の約束' })),
+      rulesCard(ctx, { open: true }),
     ),
 
     el(

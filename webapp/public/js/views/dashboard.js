@@ -7,13 +7,49 @@
 
 import { el } from '../dom.js';
 import { api } from '../api.js';
-import { alertRow, copyText, emptyState } from '../components.js';
+import { alertRow, conceptCard, copyText, emptyState, rulesCard } from '../components.js';
 import { formatJa } from '/shared/dates.js';
 import { CHANNELS, UNDERSTANDING_LEVELS, labelOf } from '/shared/constants.js';
 
 export function renderDashboard(ctx) {
   const { insights, settings } = ctx;
   const { summary, alerts, talkingPoints, weekly } = insights;
+
+  // まだ1件も記録がない段階では、数字より先に立て付けを読んでもらう。
+  // ここを飛ばすと、相手の失敗を書き留める使い方に流れていく。
+  if (summary.totalInteractions === 0) {
+    return el(
+      'div',
+      {},
+      conceptCard(),
+      el(
+        'section',
+        { class: 'card' },
+        el('div', { class: 'card__head' }, el('h2', { text: 'はじめかた' })),
+        el('p', {
+          style: { color: 'var(--ink-2)' },
+          text: 'やりとりを1件入れるところから始まります。必須は「話した内容」ひとつだけで、あとは空のままで保存できます。',
+        }),
+        el(
+          'div',
+          { class: 'row', style: { marginTop: '12px' } },
+          el('button', {
+            class: 'btn btn--primary',
+            type: 'button',
+            text: '＋ 最初の記録を入れる',
+            onClick: () => ctx.navigate('capture'),
+          }),
+          el('button', {
+            class: 'btn',
+            type: 'button',
+            text: '呼び名を決める',
+            onClick: () => ctx.navigate('settings'),
+          }),
+        ),
+        rulesCard(ctx, { open: true }),
+      ),
+    );
+  }
 
   return el(
     'div',
@@ -181,6 +217,7 @@ function talkingCard(ctx, points, settings) {
     );
   });
 
+  card.append(rulesCard(ctx));
   return card;
 }
 

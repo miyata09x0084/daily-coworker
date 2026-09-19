@@ -1,7 +1,7 @@
 /**
  * 「渡すカード」と「ふりかえり」の文面生成。
  *
- * ここだけは読む相手が違う。グラフや一覧は記録者が読むもので、カードは本人が読むもの。
+ * ここだけは読む相手が違う。グラフや一覧は記録者が読むもので、カードは相手が読むもの。
  * 言葉の理解は保たれているので、図やダッシュボードより「短い文の箇条書き」が確実に届く。
  *
  * カードが守ること:
@@ -23,7 +23,7 @@ const MAX_STEPS_SHOWN = 4;
 const MAX_PRAISE = 3;
 
 /**
- * 本人に渡すカード。
+ * 相手に渡すカード。
  * @param {object} db
  * @param {object} insights buildInsights() の結果
  * @param {{nextTalkDate?: string|null, includeMine?: boolean}} options
@@ -107,7 +107,7 @@ export function buildHandoffCard(db, insights, options = {}) {
  * 過ぎた日付は、カードに一切出さない。
  * 「9月18日をすぎています」と書かれた紙は、渡した瞬間に責めている紙になる。
  * 記録者の画面には「○日たっています」と出るので、情報は失われない。
- * 本人が受け取る側には、次に決めることだけを残す。
+ * 相手が受け取る側には、次に決めることだけを残す。
  */
 function dueLine(c, derived) {
   if (!c.due || derived.dueState === 'overdue') return '（いっしょに日にちを決める）';

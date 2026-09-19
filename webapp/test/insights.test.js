@@ -57,6 +57,28 @@ test('同時に頼みすぎていると警告する（ワーキングメモリ�
   assert.ok(!codes(buildInsights(db2, NOW)).includes('overload'));
 });
 
+test('こちらで引き取れば、渡しすぎの警告は消える', () => {
+  const db = fixture();
+  const taken = addCommitment(db, { title: '用事0', owner: 'partner', due: day(3) });
+  for (let i = 1; i < 4; i += 1) {
+    addCommitment(db, { title: `用事${i}`, owner: 'partner', due: day(3) });
+  }
+  assert.ok(codes(buildInsights(db, NOW)).includes('overload'), '4件で警告が出る');
+
+  // 「上限を超えたぶんはこちらで預かる」を実際に行う
+  taken.owner = 'me';
+
+  const after = buildInsights(db, NOW);
+  assert.ok(!codes(after).includes('overload'), '引き取れば警告は消える');
+  assert.equal(after.summary.openPartner, 3);
+  assert.equal(after.summary.openMe, 1);
+  assert.equal(after.talkingPoints.length, 3, '声をかける件数からも外れる');
+  assert.ok(
+    !after.talkingPoints.some((p) => p.title === '用事0'),
+    '引き取ったものは相手への声かけに出ない',
+  );
+});
+
 test('次に話すことは上限件数までしか出さない', () => {
   const db = fixture();
   for (let i = 0; i < 6; i += 1) addCommitment(db, { title: `用事${i}`, owner: 'partner', due: day(i - 2) });

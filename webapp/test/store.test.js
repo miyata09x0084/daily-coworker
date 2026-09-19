@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { Store, emptyDb, migrate } from '../server/store.js';
+import { resolveDataFile } from '../server/data-path.js';
 
 async function tmpFile() {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'tsutae-'));
@@ -127,4 +128,26 @@ test('新しいキーが入っていれば、旧キーより優先する', () =>
   });
   assert.equal(migrated.settings.partnerName, '新');
   assert.equal(migrated.settings.maxOpenAtOnce, 2);
+});
+
+test('保存先は環境変数が最優先、なければアプリ直下', () => {
+  assert.equal(
+    resolveDataFile({ env: { TSUTAE_DATA: '/tmp/x.json' } }),
+    '/tmp/x.json',
+  );
+  assert.equal(
+    resolveDataFile({ env: { FUTARI_DATA: '/tmp/old.json' } }),
+    '/tmp/old.json',
+    '旧名の環境変数も受ける',
+  );
+  assert.equal(
+    resolveDataFile({ env: { TSUTAE_DATA: '/tmp/new.json', FUTARI_DATA: '/tmp/old.json' } }),
+    '/tmp/new.json',
+    '新しい名前が勝つ',
+  );
+
+  const fallbacks = [];
+  const resolved = resolveDataFile({ env: {}, onFallback: (f) => fallbacks.push(f) });
+  assert.ok(path.isAbsolute(resolved));
+  assert.ok(resolved.endsWith(path.join('data', 'tsutae-log', 'db.json')) || fallbacks.length === 1);
 });

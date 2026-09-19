@@ -15,8 +15,8 @@ const FILTERS = [
   { key: 'overdue', label: '期限切れ' },
   { key: 'today', label: '今日・明日' },
   { key: 'nodue', label: '期限なし' },
-  { key: 'partner', label: '兄' },
-  { key: 'me', label: 'わたし' },
+  { key: 'partner', label: '相手' },
+  { key: 'me', label: '自分' },
   { key: 'done', label: '完了' },
 ];
 

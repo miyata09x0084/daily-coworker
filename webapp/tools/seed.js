@@ -10,15 +10,12 @@
  *   node tools/seed.js --force             # 既存データを上書き
  */
 
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import * as domain from '../server/domain.js';
+import { resolveDataFile } from '../server/data-path.js';
 import { Store } from '../server/store.js';
 import { addDays, todayKey } from '../shared/dates.js';
 
-const HERE = path.dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = path.resolve(HERE, '../..');
-const DATA_FILE = process.env.TSUTAE_DATA ?? path.join(REPO_ROOT, 'data', 'tsutae-log', 'db.json');
+const DATA_FILE = resolveDataFile();
 const force = process.argv.includes('--force');
 
 const TZ = 'Asia/Tokyo';

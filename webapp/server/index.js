@@ -8,36 +8,16 @@
  */
 
 import http from 'node:http';
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { createApp } from './app.js';
+import { resolveDataFile } from './data-path.js';
 import { Store } from './store.js';
-
-const HERE = path.dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = path.resolve(HERE, '../..');
 
 const PORT = Number(process.env.TSUTAE_PORT ?? process.env.PORT ?? 4173);
 const HOST = process.env.TSUTAE_HOST ?? '127.0.0.1';
 
-/**
- * 保存先。「ふたりログ」という名前だった頃のファイルが残っていて、
- * 新しい場所がまだ空なら、古いほうをそのまま使う。
- * 名前を変えただけで記録が見えなくなるのがいちばん困るため。
- */
-function resolveDataFile() {
-  if (process.env.TSUTAE_DATA) return process.env.TSUTAE_DATA;
-  if (process.env.FUTARI_DATA) return process.env.FUTARI_DATA;
-  const current = path.join(REPO_ROOT, 'data', 'tsutae-log', 'db.json');
-  const legacy = path.join(REPO_ROOT, 'data', 'futari-log', 'db.json');
-  if (!fs.existsSync(current) && fs.existsSync(legacy)) {
-    console.log(`[tsutae-log] 以前の保存先をそのまま使います: ${legacy}`);
-    return legacy;
-  }
-  return current;
-}
-
-const DATA_FILE = resolveDataFile();
+const DATA_FILE = resolveDataFile({
+  onFallback: (file) => console.log(`[tsutae-log] 以前の保存先をそのまま使います: ${file}`),
+});
 
 const store = new Store(DATA_FILE);
 

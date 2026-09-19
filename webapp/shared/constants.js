@@ -22,7 +22,7 @@ export const CHANNELS = [
 
 /**
  * その日の様子（記録者から見た見え方）。1 = 疲れていそう 〜 5 = 元気そう
- * 本人の評価ではなく「今日は重い話をしていい日か」を後から思い出すための目印。
+ * 相手の評価ではなく「今日は重い話をしていい日か」を後から思い出すための目印。
  */
 export const CONDITIONS = [
   { value: 1, label: 'かなり疲れていそう' },
@@ -35,17 +35,17 @@ export const CONDITIONS = [
 /**
  * 理解確認のレベル。
  * ワーキングメモリが弱い相手に「わかった？」と聞くと反射的に「わかった」と返ることが多い。
- * 本人の言葉で言い直せたか（readback）までいって初めて、伝わったと数える。
+ * 相手の言葉で言い直せたか（readback）までいって初めて、伝わったと数える。
  */
 export const UNDERSTANDING_LEVELS = [
   { key: 'none', label: '確認していない', weight: 0 },
   { key: 'asked', label: '「わかった？」と聞いた', weight: 1 },
-  { key: 'readback', label: '本人の言葉で言い直せた', weight: 2 },
+  { key: 'readback', label: '相手の言葉で言い直せた', weight: 2 },
 ];
 
 /**
  * 伝わりにくさ。急かした日・重ねすぎた日を後から見つけるために残す。
- * 「こじれた」「ぐずった」のような本人を主語にした語は置かない。
+ * 「こじれた」「ぐずった」のような相手を主語にした語は置かない。
  * うまくいかなかったのは伝え方のほうだ、という立て付けを崩さないため。
  */
 export const FRICTIONS = [
@@ -72,7 +72,7 @@ export const TECHNIQUES = [
 /** readback は understanding から導出する擬似テクニック。効き目の比較対象に加える */
 export const DERIVED_TECHNIQUE_READBACK = {
   key: 'readback',
-  label: '本人の言葉で言い直してもらった',
+  label: '相手の言葉で言い直してもらった',
   hint: '伝わったかを確かめる最強の一手',
 };
 
@@ -84,6 +84,69 @@ export const OWNERS = [
 
 export const COMMITMENT_STATUSES = ['open', 'done', 'dropped'];
 export const GOAL_STATUSES = ['active', 'achieved', 'paused'];
+
+/**
+ * このツールの立て付け。画面にもそのまま出す。
+ *
+ * 説明資料にだけ書いて画面に出さないと、使っているうちに
+ * 「相手ができなかったことの台帳」に戻っていく。戻らないように、
+ * 何を数えていて何を数えていないかを、初回と設定画面に置いておく。
+ */
+export const CONCEPT = {
+  headline: '記録するのは、相手のことではありません',
+  records: [
+    '一度に何件渡したか',
+    '書いて渡したか',
+    '急かさずに時間を取ったか',
+    '相手の言葉で戻ってきたか',
+  ],
+  notRecords: ['できなかったこと', '苦手なことの一覧', '相手への点数や評価'],
+  note: '数えているのはこちらの伝え方だけです。うまくいかなかったとき、直す場所はいつも自分の側にあります。',
+};
+
+/**
+ * 伝える側が守る約束。相手に課すルールは1つも作らない。
+ * 件数のように設定で変わる数字は文面に埋めず、画面側で補う。
+ */
+export const DELIVERY_RULES = [
+  {
+    key: 'no_rush',
+    title: '急かさない',
+    avoid: '「早く」「まだ？」を重ねる',
+    instead: '日付を余裕をもって決める',
+  },
+  {
+    key: 'praise_first',
+    title: 'できていないことから話さない',
+    avoid: '未達の確認から入る',
+    instead: 'できたことを先に置く',
+  },
+  {
+    key: 'not_in_public',
+    title: '人前で確認しない',
+    avoid: 'その場で答えさせる',
+    instead: '文字にして渡す',
+  },
+  {
+    key: 'cap',
+    title: '一度に渡しすぎない',
+    avoid: '思いついた順に足す',
+    instead: '上限を超えたぶんはこちらで預かる',
+  },
+  {
+    key: 'no_why',
+    title: '「なんで」で始めない',
+    avoid: '理由を問いただす',
+    instead: '「いつやる？」に置き換える',
+  },
+];
+
+/** 記録の書き方。主語を自分にすると、そのまま次に直す場所になる */
+export const WRITING_EXAMPLES = [
+  { avoid: 'また忘れてた', instead: '口頭だけで伝えた。文字にしていない' },
+  { avoid: '話が通じない', instead: '一度に3件渡した。1件目しか残らなかった' },
+  { avoid: 'やる気がない', instead: '日付を当日に置いた。取りかかる時間がなかった' },
+];
 
 export const DEFAULT_SETTINGS = {
   tz: 'Asia/Tokyo',

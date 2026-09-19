@@ -163,8 +163,8 @@ function buildAlerts(db, derived, today, settings) {
     push('warning', 'due_today', `今日が期限のやくそくが${dueToday.length}件`, '今日のうちに声をかけましょう。', dueToday.map((c) => c.id));
   }
 
-  // ワーキングメモリへの配慮。数が増えるほど全部こぼれ、しかも本人が追い詰められる。
-  // 主語は「渡したこちら」に置く。本人が画面を見ても、責められている文にしない。
+  // ワーキングメモリへの配慮。数が増えるほど全部こぼれ、しかも相手が追い詰められる。
+  // 主語は「渡したこちら」に置く。相手が画面を見ても、責められている文にしない。
   const partnerOpen = open.filter((c) => c.owner === 'partner' || c.owner === 'both');
   if (partnerOpen.length > settings.maxOpenAtOnce) {
     push(
@@ -184,7 +184,7 @@ function buildAlerts(db, derived, today, settings) {
       'warning',
       'no_due',
       `期限のないやくそくが${noDueStale.length}件`,
-      '「そのうち」は実行されません。具体的な日付を決めて、本人に日付で伝えてください。',
+      '「そのうち」は実行されません。具体的な日付を決めて、日付で伝えてください。',
       noDueStale.map((c) => c.id),
     );
   }
@@ -199,7 +199,7 @@ function buildAlerts(db, derived, today, settings) {
       'warning',
       'unconfirmed',
       `伝わったか確かめていないものが${unconfirmed.length}件`,
-      '伝えたときに、本人の言葉で戻ってきていません。もう一度、短く伝えて、言い直してもらいましょう。',
+      '伝えたときに、相手の言葉で戻ってきていません。もう一度、短く伝えて、言い直してもらいましょう。',
       unconfirmed.map((c) => c.id),
     );
   }

@@ -107,7 +107,7 @@ function normalizeSteps(value) {
   if (value === undefined || value === null) return [];
   if (!Array.isArray(value)) throw new ValidationError('手順は配列で指定してください');
   if (value.length > LIMITS.steps) {
-    throw new ValidationError(`手順は${LIMITS.steps}個までにしてください（多すぎると本人が追えません）`);
+    throw new ValidationError(`手順は${LIMITS.steps}個までにしてください（多すぎると追いきれません）`);
   }
   return value
     .map((raw) => {
@@ -365,7 +365,7 @@ export function deleteGoal(db, id) {
 export function updateSettings(db, patch = {}) {
   const next = { ...db.settings };
   if (patch.partnerName !== undefined) {
-    next.partnerName = str(patch.partnerName, '兄の呼び名', { max: 40, required: true });
+    next.partnerName = str(patch.partnerName, '相手の呼び名', { max: 40, required: true });
   }
   if (patch.myName !== undefined) {
     next.myName = str(patch.myName, '自分の呼び名', { max: 40, required: true });
