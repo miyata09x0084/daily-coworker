@@ -38,6 +38,8 @@ npm start                 # 空の状態から。記録は data/tsutae-log/db.js
 
 テストは `npm test`（Node 標準の `node:test`、外部依存なし）。
 
+操作をひとつずつ知りたい場合は **[使用手順書（MANUAL.md）](MANUAL.md)** を読んでください。
+
 ## コンセプト
 
 **記録するのは相手のことではなく、こちらの伝え方。**
