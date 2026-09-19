@@ -15,7 +15,7 @@ const FILTERS = [
   { key: 'overdue', label: '期限切れ' },
   { key: 'today', label: '今日・明日' },
   { key: 'nodue', label: '期限なし' },
-  { key: 'him', label: '兄' },
+  { key: 'partner', label: '兄' },
   { key: 'me', label: 'わたし' },
   { key: 'done', label: '完了' },
 ];
@@ -33,8 +33,8 @@ export function renderCommitments(ctx) {
         return c.status === 'open' && (d.dueState === 'today' || d.daysToDue === 1);
       case 'nodue':
         return c.status === 'open' && c.due === null;
-      case 'him':
-        return c.status === 'open' && (c.owner === 'him' || c.owner === 'both');
+      case 'partner':
+        return c.status === 'open' && (c.owner === 'partner' || c.owner === 'both');
       case 'me':
         return c.status === 'open' && (c.owner === 'me' || c.owner === 'both');
       case 'done':
@@ -58,7 +58,7 @@ export function renderCommitments(ctx) {
     { class: 'chips' },
     ...FILTERS.map((f) => {
       const count = ctx.db.commitments.filter((c) => matches(c, f.key)).length;
-      const label = f.key === 'him' ? ctx.settings.himName : f.key === 'me' ? ctx.settings.myName : f.label;
+      const label = f.key === 'partner' ? ctx.settings.partnerName : f.key === 'me' ? ctx.settings.myName : f.label;
       return el('button', {
         type: 'button',
         class: 'chip',
@@ -99,7 +99,7 @@ export function renderCommitments(ctx) {
         el('h2', { text: 'やくそく' }),
         el('span', {
           class: 'card__hint',
-          text: `いまお願いしているのは ${insights.summary.openHim}件（目安 ${ctx.settings.maxOpenForHim}件）`,
+          text: `いまお願いしているのは ${insights.summary.openPartner}件（目安 ${ctx.settings.maxOpenAtOnce}件）`,
         }),
       ),
       filterBar,
@@ -111,7 +111,7 @@ export function renderCommitments(ctx) {
 
 /** やりとりの記録なしで直接足したいとき用。思い出したその場で入れられることを優先する */
 function quickAddCard(ctx) {
-  const draft = { title: '', owner: 'him', due: '', goalId: '' };
+  const draft = { title: '', owner: 'partner', due: '', goalId: '' };
   const dueInput = el('input', {
     type: 'date',
     'aria-label': '期限',
@@ -147,7 +147,7 @@ function quickAddCard(ctx) {
       chipGroup({
         options: OWNERS.map((o) => ({
           ...o,
-          label: o.key === 'him' ? ctx.settings.himName : o.key === 'me' ? ctx.settings.myName : o.label,
+          label: o.key === 'partner' ? ctx.settings.partnerName : o.key === 'me' ? ctx.settings.myName : o.label,
         })),
         value: draft.owner,
         small: true,

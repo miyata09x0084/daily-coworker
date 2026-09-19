@@ -72,12 +72,12 @@ export function renderHandoff(ctx) {
         'div',
         { class: 'card__head' },
         el('h2', { text: '渡すカード' }),
-        el('span', { class: 'card__hint', text: `一度に渡すのは${ctx.settings.maxOpenForHim}件まで` }),
+        el('span', { class: 'card__hint', text: `一度に渡すのは${ctx.settings.maxOpenAtOnce}件まで` }),
       ),
       el(
         'p',
         { style: { color: 'var(--ink-2)', fontSize: '0.9rem' } },
-        `${ctx.settings.himName}に渡す紙です。口で言うだけだと残りません。印刷するか、そのまま送ってください。`,
+        `${ctx.settings.partnerName}に渡す紙です。口で言うだけだと残りません。印刷するか、そのまま送ってください。`,
       ),
       field(
         'つぎに話す日',

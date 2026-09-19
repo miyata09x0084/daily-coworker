@@ -52,7 +52,7 @@ export function renderCapture(ctx) {
           class: 'btn btn--sm',
           text: '＋ やくそくを足す',
           onClick: () => {
-            form.commitments.push({ title: '', owner: 'him', due: '', stepsText: '' });
+            form.commitments.push({ title: '', owner: 'partner', due: '', stepsText: '' });
             renderCommitmentRows();
           },
         }),
@@ -302,7 +302,7 @@ function commitmentRow(ctx, form, row, index, rerender, today) {
       chipGroup({
         options: OWNERS.map((o) => ({
           ...o,
-          label: o.key === 'him' ? ctx.settings.himName : o.key === 'me' ? ctx.settings.myName : o.label,
+          label: o.key === 'partner' ? ctx.settings.partnerName : o.key === 'me' ? ctx.settings.myName : o.label,
         })),
         value: row.owner,
         small: true,

@@ -32,7 +32,7 @@ export function buildInsights(db, now = new Date()) {
   }
 
   const open = db.commitments.filter((c) => c.status === 'open');
-  const openHim = open.filter((c) => c.owner === 'him' || c.owner === 'both');
+  const openPartner = open.filter((c) => c.owner === 'partner' || c.owner === 'both');
   const openMe = open.filter((c) => c.owner === 'me' || c.owner === 'both');
 
   const days = db.interactions.map((i) => i.day).sort();
@@ -42,7 +42,7 @@ export function buildInsights(db, now = new Date()) {
   const summary = {
     today,
     openTotal: open.length,
-    openHim: openHim.length,
+    openPartner: openPartner.length,
     openMe: openMe.length,
     overdue: open.filter((c) => derived[c.id].dueState === 'overdue').length,
     dueToday: open.filter((c) => derived[c.id].dueState === 'today').length,
@@ -165,14 +165,14 @@ function buildAlerts(db, derived, today, settings) {
 
   // ワーキングメモリへの配慮。数が増えるほど全部こぼれ、しかも本人が追い詰められる。
   // 主語は「渡したこちら」に置く。本人が画面を見ても、責められている文にしない。
-  const himOpen = open.filter((c) => c.owner === 'him' || c.owner === 'both');
-  if (himOpen.length > settings.maxOpenForHim) {
+  const partnerOpen = open.filter((c) => c.owner === 'partner' || c.owner === 'both');
+  if (partnerOpen.length > settings.maxOpenAtOnce) {
     push(
       'serious',
       'overload',
-      `お願いを${himOpen.length}件ためています`,
-      `一度に渡すのは${settings.maxOpenForHim}件までが目安です。${himOpen.length - settings.maxOpenForHim}件はこちらで預かるか、日付を先に延ばしてください。`,
-      himOpen.map((c) => c.id),
+      `お願いを${partnerOpen.length}件ためています`,
+      `一度に渡すのは${settings.maxOpenAtOnce}件までが目安です。${partnerOpen.length - settings.maxOpenAtOnce}件はこちらで預かるか、日付を先に延ばしてください。`,
+      partnerOpen.map((c) => c.id),
     );
   }
 
@@ -250,14 +250,14 @@ function buildAlerts(db, derived, today, settings) {
 }
 
 /* ------------------------------------------------------------------ *
- * 次に話すこと（最大 maxOpenForHim 件）
+ * 次に話すこと（最大 maxOpenAtOnce 件）
  * ------------------------------------------------------------------ */
 
 function buildTalkingPoints(db, derived, today, settings) {
   const candidates = db.commitments
-    .filter((c) => c.status === 'open' && (c.owner === 'him' || c.owner === 'both'))
+    .filter((c) => c.status === 'open' && (c.owner === 'partner' || c.owner === 'both'))
     .sort((a, b) => derived[b.id].urgency - derived[a.id].urgency)
-    .slice(0, settings.maxOpenForHim);
+    .slice(0, settings.maxOpenAtOnce);
 
   return candidates.map((c) => {
     const d = derived[c.id];

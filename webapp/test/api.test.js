@@ -8,7 +8,7 @@ import { createApp } from '../server/app.js';
 import { Store } from '../server/store.js';
 
 async function startServer() {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'futari-api-'));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'tsutae-api-'));
   const store = new Store(path.join(dir, 'db.json'));
   await store.load();
   const server = http.createServer(createApp(store));
@@ -52,7 +52,7 @@ test('記録から渡すカードまでをひと通り通せる', async (t) => {
     understanding: 'readback',
     techniques: ['written', 'concrete_date'],
     goalId,
-    commitments: [{ title: '見学に電話で申し込む', owner: 'him', steps: [{ text: '10時すぎにかける' }] }],
+    commitments: [{ title: '見学に電話で申し込む', owner: 'partner', steps: [{ text: '10時すぎにかける' }] }],
   });
   assert.equal(created.status, 201);
   assert.equal(created.body.commitments.length, 1);
@@ -127,7 +127,7 @@ test('書き出しと読み込みで往復できる', async (t) => {
 
   await srv.call('POST', '/api/interactions', { summary: '元の記録' });
   const exported = await srv.call('GET', '/api/export');
-  assert.match(exported.headers.get('content-disposition'), /futari-log-\d{4}-\d{2}-\d{2}\.json/);
+  assert.match(exported.headers.get('content-disposition'), /tsutae-log-\d{4}-\d{2}-\d{2}\.json/);
 
   await srv.call('POST', '/api/interactions', { summary: 'あとで消える記録' });
   const restored = await srv.call('POST', '/api/import', exported.body);
@@ -144,7 +144,7 @@ test('静的ファイルを配り、配信ディレクトリの外は読ませ�
 
   const index = await srv.call('GET', '/');
   assert.equal(index.status, 200);
-  assert.match(index.text, /ふたりログ/);
+  assert.match(index.text, /つたえログ/);
   assert.match(index.headers.get('content-security-policy'), /default-src 'self'/);
 
   const shared = await srv.call('GET', '/shared/constants.js');
@@ -156,7 +156,7 @@ test('静的ファイルを配り、配信ディレクトリの外は読ませ�
     const res = await fetch(`${srv.base}${attack}`);
     assert.ok(res.status === 403 || res.status === 404, `${attack} が通ってしまった (${res.status})`);
     const body = await res.text();
-    assert.ok(!body.includes('"name": "futari-log"'), `${attack} で package.json が読めてしまった`);
+    assert.ok(!body.includes('"name": "tsutae-log"'), `${attack} で package.json が読めてしまった`);
   }
 
   const missing = await srv.call('GET', '/ないファイル.js');
@@ -168,16 +168,16 @@ test('設定を変えると集計のしきい値も変わる', async (t) => {
   t.after(() => srv.close());
 
   for (let i = 0; i < 4; i += 1) {
-    await srv.call('POST', '/api/commitments', { title: `用事${i}`, owner: 'him' });
+    await srv.call('POST', '/api/commitments', { title: `用事${i}`, owner: 'partner' });
   }
   const before = await srv.call('GET', '/api/insights');
   assert.ok(before.body.alerts.some((a) => a.code === 'overload'));
 
-  const updated = await srv.call('PATCH', '/api/settings', { maxOpenForHim: 6, himName: 'けんじ' });
+  const updated = await srv.call('PATCH', '/api/settings', { maxOpenAtOnce: 6, partnerName: 'けんじ' });
   assert.equal(updated.status, 200);
   assert.ok(!updated.body.insights.alerts.some((a) => a.code === 'overload'));
   assert.equal(updated.body.insights.talkingPoints.length, 4, '上限が増えれば提示件数も増える');
 
-  const bad = await srv.call('PATCH', '/api/settings', { maxOpenForHim: 0 });
+  const bad = await srv.call('PATCH', '/api/settings', { maxOpenAtOnce: 0 });
   assert.equal(bad.status, 400);
 });

@@ -8,7 +8,7 @@ const card = (db, options) => buildHandoffCard(db, buildInsights(db, NOW), optio
 
 test('カードは期限を具体的な日付で書く', () => {
   const db = fixture();
-  addCommitment(db, { title: '病院に電話する', owner: 'him', due: day(3), daysAgo: 0 });
+  addCommitment(db, { title: '病院に電話する', owner: 'partner', due: day(3), daysAgo: 0 });
 
   const { text } = card(db, { nextTalkDate: day(5) });
   assert.match(text, /9月22日\(火\)まで/);
@@ -19,7 +19,7 @@ test('カードは期限を具体的な日付で書く', () => {
 test('一度に渡す件数は上限で止め、残りは記録者にだけ伝える', () => {
   const db = fixture();
   for (let i = 0; i < 5; i += 1) {
-    addCommitment(db, { title: `用事${i}`, owner: 'him', due: day(i + 1), daysAgo: 0 });
+    addCommitment(db, { title: `用事${i}`, owner: 'partner', due: day(i + 1), daysAgo: 0 });
   }
   const result = card(db);
   assert.equal(result.shownCount, 3);
@@ -30,7 +30,7 @@ test('一度に渡す件数は上限で止め、残りは記録者にだけ伝�
 
 test('過ぎた日付はカードに一切出さない（責める紙にしない）', () => {
   const db = fixture();
-  addCommitment(db, { title: '書類を出す', owner: 'him', due: day(-4), daysAgo: 10 });
+  addCommitment(db, { title: '書類を出す', owner: 'partner', due: day(-4), daysAgo: 10 });
   const { text } = card(db);
 
   assert.match(text, /書類を出す/);
@@ -43,7 +43,7 @@ test('過ぎた日付はカードに一切出さない（責める紙にしな�
 
 test('記録者の画面には経過日数が残る（情報は落とさない）', () => {
   const db = fixture();
-  addCommitment(db, { title: '書類を出す', owner: 'him', due: day(-4), daysAgo: 10 });
+  addCommitment(db, { title: '書類を出す', owner: 'partner', due: day(-4), daysAgo: 10 });
   const [point] = buildInsights(db, NOW).talkingPoints;
   assert.equal(point.reason, '決めた日から4日たっています');
 });
@@ -52,7 +52,7 @@ test('手順は未完了のものだけを並べる', () => {
   const db = fixture();
   addCommitment(db, {
     title: '区役所に行く',
-    owner: 'him',
+    owner: 'partner',
     due: day(2),
     steps: [
       { text: '身分証を持つ', done: true },
@@ -66,9 +66,9 @@ test('手順は未完了のものだけを並べる', () => {
 
 test('直近1週間にできたことを先に置く', () => {
   const db = fixture();
-  addCommitment(db, { title: '書類を出した', owner: 'him', status: 'done', daysAgo: 2 });
-  addCommitment(db, { title: '古い完了', owner: 'him', status: 'done', daysAgo: 30 });
-  addCommitment(db, { title: '次の用事', owner: 'him', due: day(2) });
+  addCommitment(db, { title: '書類を出した', owner: 'partner', status: 'done', daysAgo: 2 });
+  addCommitment(db, { title: '古い完了', owner: 'partner', status: 'done', daysAgo: 30 });
+  addCommitment(db, { title: '次の用事', owner: 'partner', due: day(2) });
 
   const { text, praiseCount } = card(db);
   assert.equal(praiseCount, 1);

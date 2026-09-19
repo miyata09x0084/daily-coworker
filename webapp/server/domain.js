@@ -237,7 +237,7 @@ export function createCommitment(db, input = {}, now = new Date()) {
   const commitment = {
     id: randomUUID(),
     title: str(input.title, 'やくそくの内容', { max: LIMITS.title, required: true }),
-    owner: enumOf(input.owner, OWNER_KEYS, '担当', 'him'),
+    owner: enumOf(input.owner, OWNER_KEYS, '担当', 'partner'),
     due: optionalDay(input.due, '期限'),
     steps: normalizeSteps(input.steps),
     status: 'open',
@@ -364,8 +364,8 @@ export function deleteGoal(db, id) {
 
 export function updateSettings(db, patch = {}) {
   const next = { ...db.settings };
-  if (patch.himName !== undefined) {
-    next.himName = str(patch.himName, '兄の呼び名', { max: 40, required: true });
+  if (patch.partnerName !== undefined) {
+    next.partnerName = str(patch.partnerName, '兄の呼び名', { max: 40, required: true });
   }
   if (patch.myName !== undefined) {
     next.myName = str(patch.myName, '自分の呼び名', { max: 40, required: true });
@@ -379,7 +379,7 @@ export function updateSettings(db, patch = {}) {
     }
     next.tz = tz;
   }
-  for (const key of ['maxOpenForHim', 'staleDays', 'contactGapDays', 'goalStallDays', 'noDueNudgeDays']) {
+  for (const key of ['maxOpenAtOnce', 'staleDays', 'contactGapDays', 'goalStallDays', 'noDueNudgeDays']) {
     if (patch[key] === undefined) continue;
     const n = Number(patch[key]);
     if (!Number.isInteger(n) || n < 1 || n > 365) {

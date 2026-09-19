@@ -44,7 +44,7 @@ test('期限切れは期限内より上に並ぶ', () => {
 test('同時に頼みすぎていると警告する（ワーキングメモリへの配慮）', () => {
   const db = fixture();
   for (let i = 0; i < 4; i += 1) {
-    addCommitment(db, { title: `用事${i}`, owner: 'him', due: day(3) });
+    addCommitment(db, { title: `用事${i}`, owner: 'partner', due: day(3) });
   }
   const insights = buildInsights(db, NOW);
   const overload = insights.alerts.find((a) => a.code === 'overload');
@@ -59,16 +59,16 @@ test('同時に頼みすぎていると警告する（ワーキングメモリ�
 
 test('次に話すことは上限件数までしか出さない', () => {
   const db = fixture();
-  for (let i = 0; i < 6; i += 1) addCommitment(db, { title: `用事${i}`, owner: 'him', due: day(i - 2) });
+  for (let i = 0; i < 6; i += 1) addCommitment(db, { title: `用事${i}`, owner: 'partner', due: day(i - 2) });
   const insights = buildInsights(db, NOW);
-  assert.equal(insights.talkingPoints.length, db.settings.maxOpenForHim);
+  assert.equal(insights.talkingPoints.length, db.settings.maxOpenAtOnce);
   // いちばん遅れているものが先頭に来る
   assert.equal(insights.talkingPoints[0].title, '用事0');
 });
 
 test('日付を過ぎた件の言い方は、できていない事実に触れない', () => {
   const db = fixture();
-  addCommitment(db, { title: '電話する', owner: 'him', due: day(-2), daysAgo: 5 });
+  addCommitment(db, { title: '電話する', owner: 'partner', due: day(-2), daysAgo: 5 });
   const [point] = buildInsights(db, NOW).talkingPoints;
 
   // 次の日付を決める問いだけを渡す。二択にして決めやすくする
@@ -82,9 +82,9 @@ test('日付を過ぎた件の言い方は、できていない事実に触れ�
 
 test('どの言い方にも、本人を責める語を入れない', () => {
   const db = fixture();
-  addCommitment(db, { title: '期限あり', owner: 'him', due: day(2) });
-  addCommitment(db, { title: '期限なし', owner: 'him', daysAgo: 9 });
-  addCommitment(db, { title: '期限切れ', owner: 'him', due: day(-3), daysAgo: 9 });
+  addCommitment(db, { title: '期限あり', owner: 'partner', due: day(2) });
+  addCommitment(db, { title: '期限なし', owner: 'partner', daysAgo: 9 });
+  addCommitment(db, { title: '期限切れ', owner: 'partner', due: day(-3), daysAgo: 9 });
 
   for (const point of buildInsights(db, NOW).talkingPoints) {
     for (const blame of ['なんで', 'どうして', 'ちゃんと', 'また', 'いつも', 'だから']) {
@@ -97,7 +97,7 @@ test('期限内の言い方には具体的な日付が入る', () => {
   const db = fixture();
   addCommitment(db, {
     title: '病院に行く',
-    owner: 'him',
+    owner: 'partner',
     due: day(2),
     steps: [{ text: '保険証を持つ' }],
   });

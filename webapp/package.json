@@ -1,8 +1,8 @@
 {
-  "name": "futari-log",
+  "name": "tsutae-log",
   "version": "1.0.0",
   "private": true,
-  "description": "双子の兄との日々のやりとりを記録し、抜け漏れを防ぎ、長期目標につなげるローカル Web アプリ",
+  "description": "1対1のやりとりと「伝え方」を記録し、口約束の抜け漏れを防ぐローカル Web アプリ",
   "type": "module",
   "engines": {
     "node": ">=20.6.0"

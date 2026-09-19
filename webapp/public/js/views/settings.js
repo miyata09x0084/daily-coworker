@@ -12,7 +12,7 @@ import { DEFAULT_SETTINGS } from '/shared/constants.js';
 
 const NUMERIC_FIELDS = [
   {
-    key: 'maxOpenForHim',
+    key: 'maxOpenAtOnce',
     label: '一度に渡す上限',
     unit: '件',
     hint: 'これを超えると警告。抱えきれる量は人によって違う',
@@ -37,9 +37,9 @@ export function renderSettings(ctx) {
         '相手の呼び名',
         el('input', {
           type: 'text',
-          value: draft.himName,
+          value: draft.partnerName,
           onInput: (e) => {
-            draft.himName = e.target.value;
+            draft.partnerName = e.target.value;
           },
         }),
         '画面とカードに出ます',

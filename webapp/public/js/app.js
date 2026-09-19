@@ -149,7 +149,7 @@ function toast(message, kind = 'ok') {
 /* ---------- テーマ ---------- */
 
 function initTheme() {
-  const saved = localStorage.getItem('futari-log:theme');
+  const saved = localStorage.getItem('tsutae-log:theme');
   if (saved === 'dark' || saved === 'light') document.documentElement.dataset.theme = saved;
   document.getElementById('theme-toggle').addEventListener('click', () => {
     const current =
@@ -157,7 +157,7 @@ function initTheme() {
       (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     const next = current === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
-    localStorage.setItem('futari-log:theme', next);
+    localStorage.setItem('tsutae-log:theme', next);
     render();
   });
 }

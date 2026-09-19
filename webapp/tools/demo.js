@@ -6,7 +6,7 @@
  *   npm run demo -- --lan     # 同じWi-Fiのスマホからも見る
  *
  * 架空のサンプルデータを一時ファイルに作り、それを指したままサーバーを起動する。
- * 本物の記録（data/futari-log/db.json）には一切触らない。
+ * 本物の記録（data/tsutae-log/db.json）には一切触らない。
  * 試したあとで本番を始めるときは、ふつうに `npm start` すれば空の状態から入れる。
  */
 
@@ -17,16 +17,16 @@ import { fileURLToPath } from 'node:url';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const WEBAPP = path.resolve(HERE, '..');
-const DEMO_FILE = path.join(os.tmpdir(), 'futari-log-demo.json');
+const DEMO_FILE = path.join(os.tmpdir(), 'tsutae-log-demo.json');
 
 const lan = process.argv.includes('--lan');
-const port = process.env.FUTARI_PORT ?? '4173';
+const port = process.env.TSUTAE_PORT ?? '4173';
 const env = {
   ...process.env,
-  FUTARI_DATA: DEMO_FILE,
-  FUTARI_PORT: port,
-  FUTARI_FROM_DEMO: '1',
-  ...(lan ? { FUTARI_HOST: '0.0.0.0' } : {}),
+  TSUTAE_DATA: DEMO_FILE,
+  TSUTAE_PORT: port,
+  TSUTAE_FROM_DEMO: '1',
+  ...(lan ? { TSUTAE_HOST: '0.0.0.0' } : {}),
 };
 
 const run = (script, args = []) =>

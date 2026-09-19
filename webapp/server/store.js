@@ -122,15 +122,35 @@ export class Store {
   }
 }
 
-/** 将来スキーマを変えたときの移行点。今は欠けたキーを埋めるだけ */
+/**
+ * 保存済みデータを現行スキーマに合わせる。欠けたキーを埋めるほか、
+ * 「ふたりログ」という名前だった頃のキー名を、現行の一般名に読み替える。
+ * 古いファイルを開いても記録が消えないようにするための層。
+ */
 export function migrate(input) {
   const base = emptyDb();
   if (!input || typeof input !== 'object') return base;
+
+  const rawSettings = { ...(input.settings ?? {}) };
+  // 旧名 → 新名。新名が入っていればそちらを優先する。
+  if (rawSettings.himName !== undefined && rawSettings.partnerName === undefined) {
+    rawSettings.partnerName = rawSettings.himName;
+  }
+  if (rawSettings.maxOpenForHim !== undefined && rawSettings.maxOpenAtOnce === undefined) {
+    rawSettings.maxOpenAtOnce = rawSettings.maxOpenForHim;
+  }
+  delete rawSettings.himName;
+  delete rawSettings.maxOpenForHim;
+
+  const commitments = (Array.isArray(input.commitments) ? input.commitments : []).map((c) =>
+    c && c.owner === 'him' ? { ...c, owner: 'partner' } : c,
+  );
+
   return {
     version: SCHEMA_VERSION,
-    settings: { ...base.settings, ...(input.settings ?? {}) },
+    settings: { ...base.settings, ...rawSettings },
     goals: Array.isArray(input.goals) ? input.goals : [],
     interactions: Array.isArray(input.interactions) ? input.interactions : [],
-    commitments: Array.isArray(input.commitments) ? input.commitments : [],
+    commitments,
   };
 }

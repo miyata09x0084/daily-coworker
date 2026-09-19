@@ -7,7 +7,7 @@
  * カードが守ること:
  *   - 1行1動作
  *   - 日付は必ず具体的に書く
- *   - 一度に渡すのは maxOpenForHim 件まで
+ *   - 一度に渡すのは maxOpenAtOnce 件まで
  *   - できたことを先に置く
  *   - できていないことには触れない（過ぎた日付も書かない）
  *
@@ -32,14 +32,14 @@ export function buildHandoffCard(db, insights, options = {}) {
   const { settings, today, derived } = insights;
   const nextTalkDate = options.nextTalkDate ?? null;
   const includeMine = options.includeMine !== false;
-  const limit = settings.maxOpenForHim;
+  const limit = settings.maxOpenAtOnce;
 
   const open = db.commitments.filter((c) => c.status === 'open');
-  const forHim = open
-    .filter((c) => c.owner === 'him' || c.owner === 'both')
+  const forPartner = open
+    .filter((c) => c.owner === 'partner' || c.owner === 'both')
     .sort((a, b) => derived[b.id].urgency - derived[a.id].urgency);
-  const shown = forHim.slice(0, limit);
-  const deferred = forHim.slice(limit);
+  const shown = forPartner.slice(0, limit);
+  const deferred = forPartner.slice(limit);
   const forMe = open
     .filter((c) => c.owner === 'me')
     .sort((a, b) => derived[b.id].urgency - derived[a.id].urgency)
@@ -48,7 +48,7 @@ export function buildHandoffCard(db, insights, options = {}) {
   const praise = recentWins(db, today);
 
   const lines = [];
-  lines.push(`${formatJa(today)}  ${settings.himName}へ`);
+  lines.push(`${formatJa(today)}  ${settings.partnerName}へ`);
   lines.push('');
 
   if (praise.length) {
@@ -177,7 +177,7 @@ export function buildWeeklyReview(db, insights) {
       out.push(`  - 言い方: ${p.phrase}`);
     }
   } else {
-    out.push(`- ${settings.himName}にお願いしている ことはありません`);
+    out.push(`- ${settings.partnerName}にお願いしている ことはありません`);
   }
   out.push('');
 
@@ -215,7 +215,7 @@ export function buildWeeklyReview(db, insights) {
   }
   out.push('');
   out.push(
-    `_未完了 ${summary.openTotal}件 / うち日付が過ぎたもの ${summary.overdue}件・日付未定 ${summary.noDue}件。いま渡しているのは ${summary.openHim}件（目安 ${settings.maxOpenForHim}件）_`,
+    `_未完了 ${summary.openTotal}件 / うち日付が過ぎたもの ${summary.overdue}件・日付未定 ${summary.noDue}件。いま渡しているのは ${summary.openPartner}件（目安 ${settings.maxOpenAtOnce}件）_`,
   );
 
   return out.join('\n');

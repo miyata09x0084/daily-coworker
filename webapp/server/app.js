@@ -146,7 +146,7 @@ async function handleApi(store, req, res, url) {
   if (method === 'GET' && route === '/export') {
     res.setHeader(
       'Content-Disposition',
-      `attachment; filename="futari-log-${todayKey(store.db.settings.tz)}.json"`,
+      `attachment; filename="tsutae-log-${todayKey(store.db.settings.tz)}.json"`,
     );
     sendJson(res, 200, store.db);
     return;
@@ -324,7 +324,7 @@ function sendText(res, status, text, type = 'text/plain; charset=utf-8') {
 
 function sendError(res, err) {
   const status = Number.isInteger(err?.status) ? err.status : 500;
-  if (status === 500) console.error('[futari-log]', err);
+  if (status === 500) console.error('[tsutae-log]', err);
   if (res.headersSent) {
     res.end();
     return;

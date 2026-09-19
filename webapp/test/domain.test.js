@@ -16,7 +16,7 @@ test('やりとりとやくそくを1回で作れる', () => {
       understanding: 'readback',
       techniques: ['written', 'concrete_date'],
       commitments: [
-        { title: '病院に電話する', owner: 'him', due: '2026-09-22', steps: [{ text: '9時すぎにかける' }] },
+        { title: '病院に電話する', owner: 'partner', due: '2026-09-22', steps: [{ text: '9時すぎにかける' }] },
       ],
     },
     NOW,
@@ -120,9 +120,9 @@ test('存在しない参照は 404 として扱う', () => {
 
 test('設定のしきい値は範囲を検査する', () => {
   const db = emptyDb();
-  domain.updateSettings(db, { maxOpenForHim: 5, himName: 'けんじ' });
-  assert.equal(db.settings.maxOpenForHim, 5);
-  assert.equal(db.settings.himName, 'けんじ');
+  domain.updateSettings(db, { maxOpenAtOnce: 5, partnerName: 'けんじ' });
+  assert.equal(db.settings.maxOpenAtOnce, 5);
+  assert.equal(db.settings.partnerName, 'けんじ');
   assert.throws(() => domain.updateSettings(db, { staleDays: 0 }), domain.ValidationError);
   assert.throws(() => domain.updateSettings(db, { tz: 'Mars/Olympus' }), domain.ValidationError);
 });

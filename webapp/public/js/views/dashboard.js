@@ -40,7 +40,7 @@ function heroCard(ctx, talkingPoints, summary, settings) {
         el('div', { class: 'hero__figure', text: String(n) }),
         el('div', {
           class: 'hero__label',
-          text: n === 0 ? `${settings.himName}にお願いしていることはありません` : `今日 ${settings.himName} に声をかけること`,
+          text: n === 0 ? `${settings.partnerName}にお願いしていることはありません` : `今日 ${settings.partnerName} に声をかけること`,
         }),
       ),
       el(
@@ -65,7 +65,7 @@ function heroCard(ctx, talkingPoints, summary, settings) {
       { class: 'stats', style: { marginTop: '14px' } },
       stat('期限切れ', summary.overdue, '件', summary.overdue > 0),
       stat('今日が期限', summary.dueToday, '件'),
-      stat('お願いしていること', summary.openHim, '件', summary.openHim > settings.maxOpenForHim),
+      stat('お願いしていること', summary.openPartner, '件', summary.openPartner > settings.maxOpenAtOnce),
       stat(`${settings.myName}がやること`, summary.openMe, '件'),
       stat(
         '最後の記録',
@@ -124,7 +124,7 @@ function talkingCard(ctx, points, settings) {
       el('h2', { text: '次に話すこと' }),
       el('span', {
         class: 'card__hint',
-        text: `一度に渡すのは${settings.maxOpenForHim}件まで`,
+        text: `一度に渡すのは${settings.maxOpenAtOnce}件まで`,
       }),
     ),
   );
