@@ -91,7 +91,7 @@ function conditionOf(value) {
   if (value === undefined || value === null || value === '') return null;
   const n = Number(value);
   if (!Number.isInteger(n) || n < 1 || n > 5) {
-    throw new ValidationError('調子は1〜5で指定してください');
+    throw new ValidationError('その日の様子は1〜5で指定してください');
   }
   return n;
 }

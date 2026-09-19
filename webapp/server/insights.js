@@ -152,8 +152,8 @@ function buildAlerts(db, derived, today, settings) {
     push(
       'critical',
       'overdue',
-      `期限切れが${overdue.length}件`,
-      `いちばん古いのは「${worst.title}」で${-derived[worst.id].daysToDue}日すぎています。まず期限を引き直してください。`,
+      `日付が過ぎたものが${overdue.length}件`,
+      `いちばん古いのは「${worst.title}」で${-derived[worst.id].daysToDue}日。催促ではなく、いつならできるかを一緒に決め直してください。`,
       overdue.map((c) => c.id),
     );
   }
@@ -163,14 +163,15 @@ function buildAlerts(db, derived, today, settings) {
     push('warning', 'due_today', `今日が期限のやくそくが${dueToday.length}件`, '今日のうちに声をかけましょう。', dueToday.map((c) => c.id));
   }
 
-  // ワーキングメモリへの配慮。同時に持たせる数が増えるほど、全部落ちる。
+  // ワーキングメモリへの配慮。数が増えるほど全部こぼれ、しかも本人が追い詰められる。
+  // 主語は「渡したこちら」に置く。本人が画面を見ても、責められている文にしない。
   const himOpen = open.filter((c) => c.owner === 'him' || c.owner === 'both');
   if (himOpen.length > settings.maxOpenForHim) {
     push(
       'serious',
       'overload',
-      `${settings.himName}が同時に${himOpen.length}件かかえています`,
-      `一度に頼むのは${settings.maxOpenForHim}件までが目安です。${himOpen.length - settings.maxOpenForHim}件は期限を先に延ばすか、いったん取り下げてください。`,
+      `お願いを${himOpen.length}件ためています`,
+      `一度に渡すのは${settings.maxOpenForHim}件までが目安です。${himOpen.length - settings.maxOpenForHim}件はこちらで預かるか、日付を先に延ばしてください。`,
       himOpen.map((c) => c.id),
     );
   }
@@ -197,8 +198,8 @@ function buildAlerts(db, derived, today, settings) {
     push(
       'warning',
       'unconfirmed',
-      `伝わったか未確認のまま止まっているものが${unconfirmed.length}件`,
-      '伝えた時に本人の言葉で言い直してもらえていません。もう一度、短く伝え直して復唱してもらいましょう。',
+      `伝わったか確かめていないものが${unconfirmed.length}件`,
+      '伝えたときに、本人の言葉で戻ってきていません。もう一度、短く伝えて、言い直してもらいましょう。',
       unconfirmed.map((c) => c.id),
     );
   }
@@ -208,8 +209,8 @@ function buildAlerts(db, derived, today, settings) {
     push(
       'serious',
       'repeated',
-      `3回以上伝えても動いていないものが${repeated.length}件`,
-      '回数を増やしても進みません。手順に割る・期限を変える・そもそも本人の課題か見直す、のどれかに切り替えてください。',
+      `同じことを3回以上伝えているものが${repeated.length}件`,
+      '回数を重ねても届きません。届いていないのは伝え方のほうです。手順に割る・日付を変える・こちらでやる、のどれかに切り替えてください。',
       repeated.map((c) => c.id),
     );
   }
@@ -261,7 +262,7 @@ function buildTalkingPoints(db, derived, today, settings) {
   return candidates.map((c) => {
     const d = derived[c.id];
     let reason;
-    if (d.dueState === 'overdue') reason = `期限を${-d.daysToDue}日すぎています`;
+    if (d.dueState === 'overdue') reason = `決めた日から${-d.daysToDue}日たっています`;
     else if (d.dueState === 'today') reason = '今日が期限です';
     else if (d.dueState === 'soon') reason = `期限まであと${d.daysToDue}日です`;
     else if (c.due === null) reason = `期限が決まらないまま${d.ageDays}日たっています`;
@@ -283,12 +284,16 @@ function buildTalkingPoints(db, derived, today, settings) {
 /**
  * そのまま言える一文。
  * 抽象語と遠回しをやめ、「何を・いつまで」だけにする。
- * 期限が過ぎているものは催促せず、日付の引き直しに誘導する
- * ——「早くして」は処理速度の差を縮めないため。
+ *
+ * 日付を過ぎたものでは、できていない事実に触れない。
+ * 「まだやってないよね」は、言った側にその気がなくても詰問として届き、
+ * そこから荒れる。事実の確認を飛ばして、次の日付を決める問いに置き換える。
+ * 二択にするのは、自由回答より決めやすいため。
  */
 function suggestPhrase(c, d) {
   if (d.dueState === 'overdue') {
-    return `「${c.title}、まだできていないよね。責めてるんじゃなくて、いつならできるか一緒に決めたい。今日と明日ならどっち？」`;
+    // 「〜の件」は動詞で終わるタイトルに付くと不自然になるので、読点でつなぐ
+    return `「${c.title}、いつやるか決めよう。今日と明日なら、どっちがいい？」`;
   }
   if (c.due) {
     return `「${c.title}。${formatJa(c.due, { weekday: true })}までにお願い」`;

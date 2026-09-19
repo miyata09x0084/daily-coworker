@@ -13,9 +13,9 @@ import { DEFAULT_SETTINGS } from '/shared/constants.js';
 const NUMERIC_FIELDS = [
   {
     key: 'maxOpenForHim',
-    label: '同時に頼む上限',
+    label: '一度に渡す上限',
     unit: '件',
-    hint: 'これを超えると警告。ワーキングメモリの負荷に合わせて決める',
+    hint: 'これを超えると警告。抱えきれる量は人によって違う',
   },
   { key: 'staleDays', label: '「止まっている」とみなす日数', unit: '日', hint: '動きがない日数' },
   { key: 'contactGapDays', label: '「連絡が途切れた」とみなす日数', unit: '日' },

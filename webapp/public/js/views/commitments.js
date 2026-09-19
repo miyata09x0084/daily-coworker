@@ -99,7 +99,7 @@ export function renderCommitments(ctx) {
         el('h2', { text: 'やくそく' }),
         el('span', {
           class: 'card__hint',
-          text: `${ctx.settings.himName}の未完了 ${insights.summary.openHim}件（目安 ${ctx.settings.maxOpenForHim}件）`,
+          text: `いまお願いしているのは ${insights.summary.openHim}件（目安 ${ctx.settings.maxOpenForHim}件）`,
         }),
       ),
       filterBar,

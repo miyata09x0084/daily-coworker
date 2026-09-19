@@ -2,7 +2,7 @@
  * 「記録する」画面。
  *
  * ここが続くかどうかでシステム全体の値打ちが決まるので、必須項目は本文ひとつだけにしてある。
- * 調子や伝え方は入れれば分析が効くが、入れなくても保存できる。
+ * その日の様子や伝え方は入れれば分析が効くが、入れなくても保存できる。
  * 入力を強制すると、忙しい日から順に記録が途切れる。
  *
  * そのうえで「やくそく」は同じ画面で切り出せるようにした。
@@ -152,7 +152,7 @@ export function renderCapture(ctx) {
         }),
       ),
       field(
-        `${ctx.settings.himName}の調子`,
+        'その日の様子',
         chipGroup({
           options: CONDITIONS.map((c) => ({ key: c.value, label: `${c.value} ${c.label}` })),
           value: form.condition,
@@ -160,7 +160,7 @@ export function renderCapture(ctx) {
             form.condition = form.condition === v ? null : v;
           },
         }),
-        '入れなくてもよい',
+        '評価ではなく、重い話をしていい日かの目印',
       ),
       field(
         '伝わったかの確認',
@@ -174,7 +174,7 @@ export function renderCapture(ctx) {
         '「わかった？」では足りないので3段階に分けている',
       ),
       field(
-        '話のかみ合い',
+        '伝わりぐあい',
         chipGroup({
           options: FRICTIONS,
           value: form.friction,

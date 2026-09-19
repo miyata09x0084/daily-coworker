@@ -43,7 +43,7 @@ function heatmapCard(ctx, insights) {
     }),
     table: tableView(
       '表で見る（記録があった日）',
-      [{ label: '日付' }, { label: '件数', num: true }, { label: '調子', num: true }],
+      [{ label: '日付' }, { label: '件数', num: true }, { label: '様子', num: true }],
       recorded
         .slice(-40)
         .reverse()
@@ -57,14 +57,14 @@ function conditionCard(ctx, insights) {
   const recorded = points.filter((p) => p.value !== null);
   if (recorded.length === 0) {
     return figure({
-      title: `${ctx.settings.himName}の調子`,
+      title: 'その日の様子',
       hint: '直近60日',
-      chart: emptyState('調子の記録がまだありません。記録するときに1〜5を選ぶと出ます。'),
+      chart: emptyState('様子の記録がまだありません。記録するときに1〜5を選ぶと出ます。'),
     });
   }
   return figure({
-    title: `${ctx.settings.himName}の調子`,
-    hint: '線は7日平均、点は記録があった日（1=しんどそう 〜 5=調子よさそう）',
+    title: 'その日の様子',
+    hint: '線は7日平均、点は記録があった日（1=疲れていそう 〜 5=元気そう）',
     chart: conditionLine(points),
     table: tableView(
       '表で見る',
@@ -246,7 +246,7 @@ function historyCard(ctx) {
           'div',
           { class: 'item__meta' },
           el('span', { text: labelOf(CHANNELS, i.channel) }),
-          i.condition ? el('span', { text: `調子 ${i.condition}/5` }) : null,
+          i.condition ? el('span', { text: `様子 ${i.condition}/5` }) : null,
           el('span', { text: labelOf(UNDERSTANDING_LEVELS, i.understanding) }),
           i.friction !== 'none' ? el('span', { text: labelOf(FRICTIONS, i.friction) }) : null,
           linked.length ? el('span', { text: `やくそく ${linked.length}件` }) : null,

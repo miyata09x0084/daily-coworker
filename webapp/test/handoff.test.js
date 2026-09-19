@@ -28,12 +28,24 @@ test('一度に渡す件数は上限で止め、残りは記録者にだけ伝�
   assert.ok(!result.text.includes('用事4'), 'あふれた分はカード本文に出ない');
 });
 
-test('過ぎた期限は「〜まで」と書かず、決め直しに置き換える', () => {
+test('過ぎた日付はカードに一切出さない（責める紙にしない）', () => {
   const db = fixture();
   addCommitment(db, { title: '書類を出す', owner: 'him', due: day(-4), daysAgo: 10 });
   const { text } = card(db);
-  assert.match(text, /9月15日\(火\)をすぎています（いつやるか いっしょに決める）/);
-  assert.ok(!text.includes('9月15日(火)まで'), '過ぎた日付を期限として提示しない');
+
+  assert.match(text, /書類を出す/);
+  assert.match(text, /いつまで: （いっしょに日にちを決める）/);
+  assert.ok(!text.includes('9月15日'), '過ぎた日付そのものを載せない');
+  for (const blame of ['すぎ', '遅れ', 'まだ', 'できていない', '忘れ']) {
+    assert.ok(!text.includes(blame), `カードに責めの語が入っている: ${blame}`);
+  }
+});
+
+test('記録者の画面には経過日数が残る（情報は落とさない）', () => {
+  const db = fixture();
+  addCommitment(db, { title: '書類を出す', owner: 'him', due: day(-4), daysAgo: 10 });
+  const [point] = buildInsights(db, NOW).talkingPoints;
+  assert.equal(point.reason, '決めた日から4日たっています');
 });
 
 test('手順は未完了のものだけを並べる', () => {

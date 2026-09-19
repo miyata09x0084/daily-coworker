@@ -167,7 +167,7 @@ export function calendarHeatmap(heatmap, { onSelectDay } = {}) {
       style: onSelectDay && cell.count ? { cursor: 'pointer' } : null,
     });
     const label = `${formatJa(cell.day)}　${cell.count ? `${cell.count}件` : '記録なし'}${
-      cell.condition ? `／調子 ${cell.condition.toFixed(1)}` : ''
+      cell.condition ? `／様子 ${cell.condition.toFixed(1)}` : ''
     }`;
     rect.addEventListener('pointerenter', (e) => show(e, label));
     rect.addEventListener('pointermove', (e) => show(e, label));
@@ -190,7 +190,7 @@ export function calendarHeatmap(heatmap, { onSelectDay } = {}) {
 }
 
 /* ------------------------------------------------------------------ *
- * 2. 調子の推移（1系列：線＋面のウォッシュ）
+ * 2. その日の様子の推移（1系列：線＋面のウォッシュ）
  * ------------------------------------------------------------------ */
 
 export function conditionLine(points) {
@@ -208,7 +208,7 @@ export function conditionLine(points) {
     class: 'chart',
     viewBox: `0 0 ${W} ${H}`,
     role: 'img',
-    'aria-label': '調子の推移',
+    'aria-label': 'その日の様子の推移',
   });
 
   for (let v = 1; v <= 5; v += 1) {

@@ -22,7 +22,9 @@ test('期限切れを検出し、いちばん古いものを名指しする', ()
   const overdue = insights.alerts.find((a) => a.code === 'overdue');
   assert.ok(overdue);
   assert.match(overdue.detail, /区役所に電話/);
-  assert.match(overdue.detail, /5日すぎ/);
+  assert.match(overdue.detail, /5日/);
+  // 記録者への指示そのものが、催促しないことを伝える
+  assert.match(overdue.detail, /催促ではなく/);
 });
 
 test('期限切れは期限内より上に並ぶ', () => {
@@ -64,12 +66,31 @@ test('次に話すことは上限件数までしか出さない', () => {
   assert.equal(insights.talkingPoints[0].title, '用事0');
 });
 
-test('期限切れの言い方は催促ではなく日付の決め直しに誘導する', () => {
+test('日付を過ぎた件の言い方は、できていない事実に触れない', () => {
   const db = fixture();
   addCommitment(db, { title: '電話する', owner: 'him', due: day(-2), daysAgo: 5 });
   const [point] = buildInsights(db, NOW).talkingPoints;
-  assert.match(point.phrase, /いつならできるか/);
+
+  // 次の日付を決める問いだけを渡す。二択にして決めやすくする
+  assert.match(point.phrase, /いつやるか決めよう/);
+  assert.match(point.phrase, /どっちがいい/);
   assert.ok(!point.phrase.includes('までにお願い'), '過ぎた日付をもう一度言っても動かない');
+  for (const blame of ['まだ', 'できていない', '忘れ', '遅れ', 'すぎ', 'なんで']) {
+    assert.ok(!point.phrase.includes(blame), `詰問になる語が入っている: ${blame}`);
+  }
+});
+
+test('どの言い方にも、本人を責める語を入れない', () => {
+  const db = fixture();
+  addCommitment(db, { title: '期限あり', owner: 'him', due: day(2) });
+  addCommitment(db, { title: '期限なし', owner: 'him', daysAgo: 9 });
+  addCommitment(db, { title: '期限切れ', owner: 'him', due: day(-3), daysAgo: 9 });
+
+  for (const point of buildInsights(db, NOW).talkingPoints) {
+    for (const blame of ['なんで', 'どうして', 'ちゃんと', 'また', 'いつも', 'だから']) {
+      assert.ok(!point.phrase.includes(blame), `${point.title}: 責めの語「${blame}」が入っている`);
+    }
+  }
 });
 
 test('期限内の言い方には具体的な日付が入る', () => {

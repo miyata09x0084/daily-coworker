@@ -65,8 +65,8 @@ function heroCard(ctx, talkingPoints, summary, settings) {
       { class: 'stats', style: { marginTop: '14px' } },
       stat('期限切れ', summary.overdue, '件', summary.overdue > 0),
       stat('今日が期限', summary.dueToday, '件'),
-      stat(`${settings.himName}の未完了`, summary.openHim, '件', summary.openHim > settings.maxOpenForHim),
-      stat(`${settings.myName}の未完了`, summary.openMe, '件'),
+      stat('お願いしていること', summary.openHim, '件', summary.openHim > settings.maxOpenForHim),
+      stat(`${settings.myName}がやること`, summary.openMe, '件'),
       stat(
         '最後の記録',
         summary.daysSinceContact === null ? '—' : summary.daysSinceContact === 0 ? '今日' : `${summary.daysSinceContact}日前`,
@@ -206,7 +206,7 @@ function weeklyCard(weekly, settings) {
       stat('完了', thisWeek.done, `件 (先週${delta(thisWeek.done, lastWeek.done)})`),
       stat('新しいやくそく', thisWeek.created, '件'),
       stat(
-        `${settings.himName}の調子`,
+        'その日の様子',
         thisWeek.avgCondition === null ? '—' : thisWeek.avgCondition.toFixed(1),
         thisWeek.avgCondition === null ? '' : '／5',
       ),
@@ -255,7 +255,7 @@ function recentCard(ctx) {
           'div',
           { class: 'item__meta' },
           el('span', { text: labelOf(CHANNELS, i.channel) }),
-          i.condition ? el('span', { text: `調子 ${i.condition}/5` }) : null,
+          i.condition ? el('span', { text: `様子 ${i.condition}/5` }) : null,
           el('span', { text: labelOf(UNDERSTANDING_LEVELS, i.understanding) }),
         ),
       ),

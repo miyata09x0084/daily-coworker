@@ -1,14 +1,20 @@
 /**
  * 「渡すカード」と「ふりかえり」の文面生成。
  *
- * ここだけは見せる相手が違う。グラフや一覧は記録者（弟）が読むもので、
- * カードは本人（兄）が読むもの。知覚推理が弱く言語理解は保たれているプロフィールでは、
- * 図やダッシュボードより「短い文の箇条書き」のほうが確実に届く。だからカードは
+ * ここだけは読む相手が違う。グラフや一覧は記録者が読むもので、カードは本人が読むもの。
+ * 言葉の理解は保たれているので、図やダッシュボードより「短い文の箇条書き」が確実に届く。
+ *
+ * カードが守ること:
  *   - 1行1動作
- *   - 期限は必ず具体的な日付
- *   - 同時に渡すのは maxOpenForHim 件まで
+ *   - 日付は必ず具体的に書く
+ *   - 一度に渡すのは maxOpenForHim 件まで
  *   - できたことを先に置く
- * を守る。LINE にそのまま貼れるプレーンテキストにしてある。
+ *   - できていないことには触れない（過ぎた日付も書かない）
+ *
+ * 最後の1つがいちばん大事。渡した紙に責めが1行でも混ざると、
+ * その紙自体が「見せられると嫌なもの」になり、次から受け取ってもらえなくなる。
+ * 進捗の管理より、受け取り続けてもらえることを優先する。
+ * LINE にそのまま貼れるプレーンテキストにしてある。
  */
 
 import { addDays, diffDays, formatJa } from '../shared/dates.js';
@@ -97,14 +103,14 @@ export function buildHandoffCard(db, insights, options = {}) {
 
 /**
  * 期限の書き方。
- * 過ぎた日付をそのまま「〜まで」と書いたカードは、本人にとっては責められている紙になる。
- * 期限切れは責めずに、日付を決め直す行に置き換える。
+ *
+ * 過ぎた日付は、カードに一切出さない。
+ * 「9月18日をすぎています」と書かれた紙は、渡した瞬間に責めている紙になる。
+ * 記録者の画面には「○日たっています」と出るので、情報は失われない。
+ * 本人が受け取る側には、次に決めることだけを残す。
  */
 function dueLine(c, derived) {
-  if (!c.due) return '（いっしょに日にちを決める）';
-  if (derived.dueState === 'overdue') {
-    return `${formatJa(c.due)}をすぎています（いつやるか いっしょに決める）`;
-  }
+  if (!c.due || derived.dueState === 'overdue') return '（いっしょに日にちを決める）';
   return `${formatJa(c.due)}まで`;
 }
 
@@ -140,7 +146,7 @@ export function buildWeeklyReview(db, insights) {
   out.push(`| 新しいやくそく | ${thisWeek.created}件 | ${lastWeek.created}件 |`);
   out.push(`| 完了 | ${thisWeek.done}件 | ${lastWeek.done}件 |`);
   out.push(
-    `| ${settings.himName}の調子（平均） | ${fmtNum(thisWeek.avgCondition)} | ${fmtNum(lastWeek.avgCondition)} |`,
+    `| その日の様子（平均） | ${fmtNum(thisWeek.avgCondition)} | ${fmtNum(lastWeek.avgCondition)} |`,
   );
   out.push('');
 
@@ -209,7 +215,7 @@ export function buildWeeklyReview(db, insights) {
   }
   out.push('');
   out.push(
-    `_未完了 ${summary.openTotal}件 / うち期限切れ ${summary.overdue}件・期限なし ${summary.noDue}件。${settings.himName}が同時にかかえているのは ${summary.openHim}件（目安 ${settings.maxOpenForHim}件）_`,
+    `_未完了 ${summary.openTotal}件 / うち日付が過ぎたもの ${summary.overdue}件・日付未定 ${summary.noDue}件。いま渡しているのは ${summary.openHim}件（目安 ${settings.maxOpenForHim}件）_`,
   );
 
   return out.join('\n');
