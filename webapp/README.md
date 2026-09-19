@@ -8,19 +8,26 @@
 - 外部サービスへの通信は一切しない（CSP で `self` のみ許可）
 - 依存パッケージ **ゼロ**。`npm install` は不要
 
-## 使いはじめる
+## まず動かしてみる
 
 ```bash
 cd webapp
-npm start           # http://127.0.0.1:4173
+npm run demo              # 架空のサンプルデータ入りで起動 → http://127.0.0.1:4173
+npm run demo -- --lan     # 同じWi-Fiのスマホからも開ける（URLが表示される）
 ```
 
-動きを先に見たいときはサンプルデータ（架空）を入れられる。
+サンプルは一時ファイル（`/tmp/futari-log-demo.json`）に作られるので、本物の記録には触れない。
+
+## 本番で使う
 
 ```bash
-FUTARI_DATA=/tmp/demo.json node tools/seed.js
-FUTARI_DATA=/tmp/demo.json npm start
+cd webapp
+npm start                 # 空の状態から。記録は data/futari-log/db.json に貯まる
 ```
+
+スマホから使いたいときは `FUTARI_HOST=0.0.0.0 npm start`。
+ただし**認証はない**ので、同じネットワークにいる端末からは誰でも読める。
+つないでいる人が分かっているネットワークでだけ使うこと。
 
 | 環境変数 | 既定値 | 意味 |
 |---|---|---|

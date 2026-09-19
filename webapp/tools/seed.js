@@ -163,4 +163,7 @@ await store.mutate((db) => {
 });
 
 console.log(`サンプルデータを作りました: ${store.file}`);
-console.log('  npm start で http://127.0.0.1:4173 を開いてください。');
+// demo.js から呼ばれたときは、そのまま続けて起動するので案内を重ねない
+if (!process.env.FUTARI_FROM_DEMO) {
+  console.log('  npm start で http://127.0.0.1:4173 を開いてください。');
+}

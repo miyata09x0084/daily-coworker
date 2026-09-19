@@ -11,6 +11,7 @@
     "start": "node server/index.js",
     "dev": "node --watch server/index.js",
     "test": "node --test",
+    "demo": "node tools/demo.js",
     "seed": "node tools/seed.js"
   },
   "license": "MIT"
