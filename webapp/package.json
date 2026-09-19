@@ -1,0 +1,17 @@
+{
+  "name": "futari-log",
+  "version": "1.0.0",
+  "private": true,
+  "description": "双子の兄との日々のやりとりを記録し、抜け漏れを防ぎ、長期目標につなげるローカル Web アプリ",
+  "type": "module",
+  "engines": {
+    "node": ">=20.6.0"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "test": "node --test",
+    "seed": "node tools/seed.js"
+  },
+  "license": "MIT"
+}

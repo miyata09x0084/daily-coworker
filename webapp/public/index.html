@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ja" data-theme="">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>ふたりログ</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='12' cy='16' r='7' fill='%232a78d6'/%3E%3Ccircle cx='21' cy='16' r='7' fill='%231baf7a' fill-opacity='.8'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <header class="app-header no-print">
+      <div class="app-header__bar">
+        <div class="brand">
+          <h1>ふたりログ</h1>
+          <span class="brand__sub" id="brand-sub"></span>
+        </div>
+        <button class="btn btn--sm btn--ghost push-right" id="theme-toggle" type="button">
+          表示切替
+        </button>
+      </div>
+      <nav class="nav" id="nav" aria-label="画面"></nav>
+    </header>
+
+    <main id="view" class="view" tabindex="-1">
+      <p class="empty">読み込み中…</p>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="/js/app.js"></script>
+  </body>
+</html>

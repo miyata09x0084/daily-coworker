@@ -9,7 +9,11 @@
 00_context/memories/  # AI記憶(好み・意思決定・セッション間ログ・判断基準)
 01_strategy/          # ビジネス戦略
 output/               # AI出力(research/ リサーチ、articles/ 記事)
+webapp/               # ふたりログ(家族とのやりとり記録アプリ。依存ゼロ・ローカル完結)
 ```
+
+`webapp/` の記録実体は `data/futari-log/db.json`(gitignore 済み)。
+スキル `futari-log` はこのアプリのローカル API 経由で実データを読む。推測で答えない。
 
 ## スキル
 

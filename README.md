@@ -62,6 +62,11 @@ daily-coworker/
 │   ├── context-log.template.md
 │   └── case-judgment-framework.template.md
 ├── 01_strategy/                       # Business strategy docs
+├── webapp/                            # Futari-log: local-first web app (zero dependencies)
+│   ├── server/                        # node:http server, JSON store, insights, handoff cards
+│   ├── shared/                        # Definitions read by both server and browser
+│   ├── public/                        # SPA (plain ES modules, no build step)
+│   └── test/                          # node:test suite
 └── output/
     ├── news/                          # /tech-news daily digests
     ├── research/                      # /deep-research reports
@@ -141,5 +146,25 @@ Say a trigger word in Claude Code to launch the corresponding skill. The trigger
 | 「調べて」 / 「リサーチして」   | "look it up" / "research"           | `/deep-research` |
 | 「記事を書いて」 / 「ブログ書いて」 | "write an article" / "write a blog" | `/write-article` |
 | 「覚えておいて」 / 「メモして」  | "remember this" / "note this"       | `/agent-memory` |
+| 「ふたりログ」 / 「兄との記録」  | "futari-log" / "log with my brother" | `/futari-log`  |
 
 Slash commands (e.g., `/tech-news`) can also be invoked directly.
+
+## Futari-log (`webapp/`)
+
+A local-first web app for logging day-to-day communication with a family member who has a
+developmental disability — so that follow-ups stop depending on memory, and daily exchanges
+add up to long-term goals.
+
+It is designed around one specific cognitive profile (WAIS: verbal comprehension average,
+perceptual reasoning / working memory / processing speed below average), and that asymmetry
+drives the whole design: **charts are for the person keeping the log; the person being
+supported gets short written sentences, never a graph.**
+
+```bash
+cd webapp && npm start     # http://127.0.0.1:4173
+```
+
+Zero npm dependencies, no build step, binds to localhost only, and stores everything in
+`data/futari-log/db.json` (git-ignored). See [`webapp/README.md`](webapp/README.md) for the
+design rationale and API.
